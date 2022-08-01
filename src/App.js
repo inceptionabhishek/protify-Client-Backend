@@ -1,24 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import { Container, Row, Col } from "react-bootstrap";
+import CardsCompo from "./components/CardsCompo";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="App">
+        <div className="TopSection">
+          <div className="TopTop">
+            <img src="https://i.gifer.com/6oa.gif" alt=""></img>
+            <h1 className="Top-Heading">Welcome To Protify</h1>
+          </div>
+
+          <p className="Top-Heading-SubHeading">
+            Now, Making portfolio is just One Click Away!
+            <br /> Bruh, Just Follow Some step, ... Bingo!You have your
+            portfolio ready.
+          </p>
+          <div className="Auth-Button">
+            <button className="Top-Heading-Button-Login">Login</button>
+            <button className="Top-Heading-Button-Login">Signup</button>
+          </div>
+        </div>
+        <div className="Divider" />
+        <div className="ExploreSection">
+          <h1 className="TopHeading-ExploreSection">Explore portfolios</h1>
+          <img
+            className="projects-gif-top"
+            src="https://i.gifer.com/bf6.gif"
+            alt=""
+          ></img>
+        </div>
+        <Container>
+          <Row>
+            <Col sm>
+              <CardsCompo />
+            </Col>
+            <Col sm>
+              <CardsCompo />
+            </Col>
+            <Col sm>
+              <CardsCompo />
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    </>
   );
 }
 
