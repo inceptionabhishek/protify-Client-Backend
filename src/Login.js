@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function Login() {
@@ -12,25 +12,29 @@ function Login() {
   const api = "http://localhost:5000/api/user/login";
   const loginHandler = async (e) => {
     e.preventDefault();
-    console.log(email, password);
-    await axios
-      .post("http://localhost:5000/api/user/login", {
-        email: email,
-        password: password,
-      })
-      .then((response) => {
-        if (response.data.message === "Success") {
-          localStorage.setItem("userid", response.data.userid);
-          navigate(`/dashboard/${response.data.userid}`);
-        } else {
-          toast(response.data.message);
-        }
-      });
+    if (email === "" || password === "") {
+      toast("Please Fill all the fields");
+    } else {
+      console.log(email, password);
+      await axios
+        .post("http://localhost:5000/api/user/login", {
+          email: email,
+          password: password,
+        })
+        .then((response) => {
+          if (response.data.message === "Success") {
+            localStorage.setItem("userid", response.data.userid);
+            navigate(`/dashboard/${response.data.userid}`);
+          } else {
+            toast(response.data.message);
+          }
+        });
+    }
   };
   return (
     <>
       <ToastContainer />
-      <div className="Auth-form-container">
+      <div className="Auth-form-container" style={{ height: "600px" }}>
         <form className="Auth-form">
           <div className="Auth-form-content">
             <h3 className="Auth-form-title">Sign In</h3>
@@ -62,7 +66,7 @@ function Login() {
               </button>
             </div>
             <p className="forgot-password text-right mt-2">
-              Forgot <a href="#">password?</a>
+              wanna <Link to="/signup">signup?</Link>
             </p>
           </div>
         </form>

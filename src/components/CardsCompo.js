@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 
 function CardsCompo(props) {
   return (
-    <Card style={{ width: "18rem" }}>
+    <Card style={{ width: "20rem", margin: "20px" }}>
       <Card.Img variant="top" src="holder.js/100px180" />
       <Card.Body>
         <Card.Title>Card Title</Card.Title>
