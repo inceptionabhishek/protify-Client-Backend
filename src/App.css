@@ -60,3 +60,61 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.Temp-Centered {
+  display: flex;
+  justify-content: center;
+}
+.Login-Form {
+  background-color: antiquewhite;
+  height: 400px;
+}
+.Top-Left {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.Email-Field {
+  display: flex;
+  justify-content: center;
+}
+.Input-field {
+  height: 30px;
+  margin-top: 30px;
+  margin-left: 20px;
+}
+.Auth-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(255, 252, 252);
+}
+
+.Auth-form {
+  width: 420px;
+  box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  border-radius: 8px;
+  background-color: blanchedalmond;
+}
+
+.Auth-form-content {
+  padding-left: 12%;
+  padding-right: 12%;
+}
+
+.Auth-form-title {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 24px;
+  color: rgb(34, 34, 34);
+  font-weight: 800;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(34, 34, 34);
+}

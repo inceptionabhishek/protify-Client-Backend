@@ -1,49 +1,34 @@
 import "./App.css";
 import { Container, Row, Col } from "react-bootstrap";
 import CardsCompo from "./components/CardsCompo";
+import { Routes, Route } from "react-router-dom";
+import Homepage from "./Homepage";
+import Dashboard from "./Dashboard";
+import { useEffect, useState } from "react";
+import Login from "./Login";
+import Signup from "./Signup";
 function App() {
+  const [findid, setFindid] = useState("");
+  const [changestate, setchangestate] = useState(true);
+  setTimeout(() => {
+    if (changestate === true) {
+      setchangestate(false);
+    } else {
+      setchangestate(true);
+    }
+  }, 2000);
+  useEffect(() => {
+    setFindid(localStorage.getItem("findid"));
+  }, [changestate]);
+
   return (
     <>
-      <div className="App">
-        <div className="TopSection">
-          <div className="TopTop">
-            <img src="https://i.gifer.com/6oa.gif" alt=""></img>
-            <h1 className="Top-Heading">Welcome To Protify</h1>
-          </div>
-
-          <p className="Top-Heading-SubHeading">
-            Now, Making portfolio is just One Click Away!
-            <br /> Bruh, Just Follow Some step, ... Bingo!You have your
-            portfolio ready.
-          </p>
-          <div className="Auth-Button">
-            <button className="Top-Heading-Button-Login">Login</button>
-            <button className="Top-Heading-Button-Login">Signup</button>
-          </div>
-        </div>
-        <div className="Divider" />
-        <div className="ExploreSection">
-          <h1 className="TopHeading-ExploreSection">Explore portfolios</h1>
-          <img
-            className="projects-gif-top"
-            src="https://i.gifer.com/bf6.gif"
-            alt=""
-          ></img>
-        </div>
-        <Container>
-          <Row>
-            <Col sm>
-              <CardsCompo />
-            </Col>
-            <Col sm>
-              <CardsCompo />
-            </Col>
-            <Col sm>
-              <CardsCompo />
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard/:findid" element={<Dashboard />} />
+      </Routes>
     </>
   );
 }
