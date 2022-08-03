@@ -17,7 +17,7 @@ function App() {
     } else {
       setchangestate(true);
     }
-  }, 2000);
+  }, 300);
   useEffect(() => {
     setFindid(localStorage.getItem("userid"));
   }, [changestate]);

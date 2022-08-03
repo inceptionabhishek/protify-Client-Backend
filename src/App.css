@@ -126,3 +126,14 @@ label {
   display: flex;
   justify-content: en;
 }
+.HomePage-Go {
+  font-family: "Mouse Memoirs", sans-serif;
+  background-color: black;
+  color: antiquewhite;
+  border-radius: 20px;
+  margin-left: 20px;
+}
+.hint {
+  color: rgb(31, 30, 15);
+  font-weight: bold;
+}
