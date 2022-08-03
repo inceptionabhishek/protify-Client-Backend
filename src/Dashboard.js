@@ -1,4 +1,5 @@
 import React from "react";
+import Spinner from "react-bootstrap/Spinner";
 import { Container } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -12,6 +13,30 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 function Dashboard() {
+  const [name, setName] = useState("");
+  const [currentTitle, setCurrentTitle] = useState("");
+  const [aboutme, setAboutme] = useState("");
+  const [collegeName, setCollegeName] = useState("");
+  const [description, setDescription] = useState("");
+  const [loader, setLoader] = useState(false);
+  useEffect(() => {
+    axios
+      .post("http://localhost:5000/api/homepage/get/data", {
+        findid: localStorage.getItem("userid"),
+      })
+      .then((result) => {
+        console.log("gg");
+        result = result.data.data;
+        setName(result.Name);
+        setCurrentTitle(result.currentTitle);
+        setAboutme(result.aboutme);
+        setCollegeName(result.collegeData.name);
+        setDescription(result.collegeData.description);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   const [projectshow, projectsetShow] = useState(false);
   const projecthandleShow = (event) => {
     event.preventDefault();
@@ -19,6 +44,39 @@ function Dashboard() {
   };
   const projecthandleClose = (event) => {
     //event.preventDefault();
+    projectsetShow(false);
+  };
+  const [projectAddName, setProjectAddName] = useState("");
+  const [projectAddDesc, setProjectAddDesc] = useState("");
+  const [projectAddPic, setProjectAddPic] = useState("");
+  const [projectAddLink, setProjectAddLink] = useState("");
+  const [projectAddTechStacks, setProjectAddTechStacks] = useState("");
+  const projecthandleCloseWithSave = () => {
+    axios
+      .post("http://localhost:5000/api/projects/add", {
+        findid: localStorage.getItem("userid"),
+        Name: projectAddName,
+        link: projectAddLink,
+        pic: "www.img122.src",
+        description: projectAddDesc,
+        techstacks: projectAddTechStacks,
+      })
+      .then((result) => {
+        console.log(result);
+        if (loader === false) {
+          setLoader(true);
+        } else {
+          setLoader(false);
+        }
+        if (bool === false) {
+          setbool(true);
+        } else {
+          setbool(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     projectsetShow(false);
   };
   const [editshow, setEditShow] = useState(false);
@@ -43,12 +101,23 @@ function Dashboard() {
       })
       .then((result) => {
         console.log(result);
+        if (loader === false) {
+          setLoader(true);
+        } else {
+          setLoader(false);
+        }
+        if (bool === false) {
+          setbool(true);
+        } else {
+          setbool(false);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
     setEditShow(false);
   };
+  const [bool, setbool] = useState(true);
   var [projectArray, setProjectArray] = useState([]);
   const [projectEditName, setProjectEditName] = useState("");
   const [projectEditDesc, setProjectEditDesc] = useState("");
@@ -67,7 +136,7 @@ function Dashboard() {
       .catch((err) => {
         console.log(err);
       });
-  }, [editshow]);
+  }, [editshow, projectshow, bool, loader]);
   useEffect(() => {
     const api = "http://localhost:5000/api/projects/get/single";
     axios
@@ -80,11 +149,43 @@ function Dashboard() {
         setProjectEditPic(result.pic);
         setProjectEditDesc(result.description);
         setProjectEditTechStacks(result.techstacks);
+        setTimeout(() => {}, 3000);
+        setLoader(false);
+        
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [editshow]);
+  }, [bool, loader]);
+
+  const updateUserInfoHandle = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:5000/api/homepage/update/data", {
+        Name: name,
+        currentTitle: currentTitle,
+        aboutme: aboutme,
+        picture: "img/1src",
+        collegeData: {
+          name: collegeName,
+          description: description,
+          startingDate: "20-06-2020",
+          endingDate: "Present",
+        },
+        findid: localStorage.getItem("userid"),
+        resume: "www.djdjdj.com",
+      })
+      .then((result) => {
+        if (bool === true) {
+          setbool(false);
+        } else {
+          setbool(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       <ToastContainer />
@@ -109,6 +210,10 @@ function Dashboard() {
                 type="text"
                 className="form-control mt-1"
                 placeholder="Enter Name"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
               />
             </div>
             <div className="form-group mt-3">
@@ -117,6 +222,10 @@ function Dashboard() {
                 type="text"
                 className="form-control mt-1"
                 placeholder="Intern.., software devloper.."
+                value={currentTitle}
+                onChange={(e) => {
+                  setCurrentTitle(e.target.value);
+                }}
               />
             </div>
             <div className="form-group mt-3">
@@ -125,8 +234,19 @@ function Dashboard() {
                 type="text"
                 className="form-control mt-1"
                 placeholder="Write about Your self"
+                value={aboutme}
+                onChange={(e) => {
+                  setAboutme(e.target.value);
+                }}
               />
             </div>
+            <button
+              className="HomePage-Go"
+              style={{ width: "120px", marginTop: "20px" }}
+              onClick={updateUserInfoHandle}
+            >
+              Update
+            </button>
             <h3
               className="Top-Heading"
               style={{ fontSize: "20px", marginTop: "20px" }}
@@ -139,6 +259,10 @@ function Dashboard() {
                 type="text"
                 className="form-control mt-1"
                 placeholder="MIT,IIT,.."
+                value={collegeName}
+                onChange={(e) => {
+                  setCollegeName(e.target.value);
+                }}
               />
             </div>
             <div className="form-group mt-3">
@@ -147,8 +271,19 @@ function Dashboard() {
                 as="textarea"
                 placeholder="Write about your college Life, achievement"
                 rows={3}
+                value={description}
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                }}
               />
             </div>
+            <button
+              className="HomePage-Go"
+              style={{ width: "120px", marginTop: "20px" }}
+              onClick={updateUserInfoHandle}
+            >
+              Update
+            </button>
             <h3
               className="Top-Heading"
               style={{ fontSize: "20px", marginTop: "20px" }}
@@ -168,19 +303,52 @@ function Dashboard() {
                   <Card style={{ width: "18rem" }}>
                     <Card.Img variant="top" src={project.pic} />
                     <Card.Body>
-                      <Card.Title>{project.Name}</Card.Title>
-                      <Card.Text>{project.description}</Card.Text>
-                      <Card.Text>{project.link}</Card.Text>
+                      <Card.Title>Name : {project.Name}</Card.Title>
+                      <Card.Text>Description : {project.description}</Card.Text>
+                      <Card.Text>Link : {project.link}</Card.Text>
+                      <Card.Text>TechStacks : {project.techstacks}</Card.Text>
                       <button
                         className="HomePage-Go"
                         style={{ width: "90px" }}
                         onClick={(e) => {
                           e.preventDefault();
+                          console.log(project._id);
                           localStorage.setItem("editprojectid", project._id);
+
+                          setLoader(true);
                           setEditShow(true);
                         }}
                       >
                         Edit
+                      </button>
+                      <button
+                        className="HomePage-Go"
+                        style={{ width: "90px", backgroundColor: "red" }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          axios
+                            .post("http://localhost:5000/api/projects/delete", {
+                              id: project._id,
+                            })
+                            .then((result) => {
+                              console.log(result);
+                              if (loader === false) {
+                                setLoader(true);
+                              } else {
+                                setLoader(false);
+                              }
+                              if (bool === false) {
+                                setbool(true);
+                              } else {
+                                setbool(false);
+                              }
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        }}
+                      >
+                        Delete
                       </button>
                     </Card.Body>
                   </Card>
@@ -206,6 +374,9 @@ function Dashboard() {
                     type="text"
                     className="form-control mt-1"
                     placeholder="Name like portify,.."
+                    onChange={(e) => {
+                      setProjectAddName(e.target.value);
+                    }}
                   />
                 </div>
                 <div className="form-group mt-3">
@@ -214,6 +385,9 @@ function Dashboard() {
                     type="text"
                     className="form-control mt-1"
                     placeholder="github,..bitbucket.."
+                    onChange={(e) => {
+                      setProjectAddLink(e.target.value);
+                    }}
                   />
                 </div>
                 <div className="form-group mt-3">
@@ -222,6 +396,9 @@ function Dashboard() {
                     as="textarea"
                     placeholder="Describe Project"
                     rows={3}
+                    onChange={(e) => {
+                      setProjectAddDesc(e.target.value);
+                    }}
                   />
                 </div>
                 <div className="form-group mt-3">
@@ -230,6 +407,9 @@ function Dashboard() {
                     as="textarea"
                     placeholder="Like ReactJS, MERN, NODE,..."
                     rows={3}
+                    onChange={(e) => {
+                      setProjectAddTechStacks(e.target.value);
+                    }}
                   />
                 </div>
               </Modal.Body>
@@ -242,7 +422,7 @@ function Dashboard() {
                   Close
                 </button>
                 <button
-                  onClick={projecthandleClose}
+                  onClick={projecthandleCloseWithSave}
                   className="HomePage-Go"
                   style={{ width: "70px" }}
                 >
@@ -256,54 +436,65 @@ function Dashboard() {
                 <Modal.Title className="Top-Heading">Edit Project</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <div className="form-group mt-3">
-                  <label>Name Of Project 🔫</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="Name like portify,.."
-                    value={projectEditName}
-                    onChange={(e) => {
-                      setProjectEditName(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Add Link 🎁</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="github,..bitbucket.."
-                    value={projectEditLink}
-                    onChange={(e) => {
-                      setProjectEditLink(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Add Description 🔥</label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Describe Project"
-                    rows={3}
-                    value={projectEditDesc}
-                    onChange={(e) => {
-                      setProjectEditDesc(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>TechStacks Used 🚗</label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Like ReactJS, MERN, NODE,..."
-                    rows={3}
-                    value={projectEditTechStacks}
-                    onChange={(e) => {
-                      setProjectEditTechStacks(e.target.value);
-                    }}
-                  />
-                </div>
+                {loader ? (
+                  <>
+                    <div className="Loader">
+                      <Spinner animation="border" variant="warning" />
+                      <p className="Loader-Hint">Fetching Details....</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="form-group mt-3">
+                      <label>Name Of Project 🔫</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="Name like portify,.."
+                        value={projectEditName}
+                        onChange={(e) => {
+                          setProjectEditName(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Add Link 🎁</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="github,..bitbucket.."
+                        value={projectEditLink}
+                        onChange={(e) => {
+                          setProjectEditLink(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Add Description 🔥</label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Describe Project"
+                        rows={3}
+                        value={projectEditDesc}
+                        onChange={(e) => {
+                          setProjectEditDesc(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>TechStacks Used 🚗</label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Like ReactJS, MERN, NODE,..."
+                        rows={3}
+                        value={projectEditTechStacks}
+                        onChange={(e) => {
+                          setProjectEditTechStacks(e.target.value);
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
               </Modal.Body>
               <Modal.Footer>
                 <button

@@ -137,3 +137,15 @@ label {
   color: rgb(31, 30, 15);
   font-weight: bold;
 }
+
+.Loader {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+.Loader-Hint {
+  color: rgb(1, 0, 0);
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  margin-left: 20px;
+}
