@@ -1,4 +1,5 @@
 import React from "react";
+import ProgressBar from "react-animated-progress-bar";
 import Spinner from "react-bootstrap/Spinner";
 import { Container } from "react-bootstrap";
 import { useState, useEffect } from "react";
@@ -12,32 +13,102 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
+import { FiEdit2 } from "react-icons/fi";
+import { BsUpload } from "react-icons/bs";
+import { FcDocument } from "react-icons/fc";
 function Dashboard() {
+  /*
+  EXPERIENCE : Section START:----------------------------------------------------
+  */
+  const [experiencearr, setExperiencearr] = useState([]);
+  const [experienceshow, setexperienceShow] = useState(false);
+  const handleexperienceClose = () => setexperienceShow(false);
+  const handleexperienceShow = () => setexperienceShow(true);
+  const [companyName, setCompanyName] = useState("");
+  const [experienceType, setExperienceType] = useState("");
+  const [duration, setDuration] = useState("");
+  const [experiencedescription, setexperienceDescription] = useState("");
+  const [expericencetechstacks, setExperienceTechStacks] = useState("");
+  const [CertificateLink, setCertificateLink] = useState("");
+  const [stateChange, setStateChange] = useState(false);
+  const handleexperienceClosewithSave = () => {
+    axios
+      .post("http://localhost:5000/api/experience/add", {
+        type: experienceType,
+        company: companyName,
+        duration: duration,
+        startingDate: "12-12-2021",
+        endingDate: "present",
+        description: experiencedescription,
+        techstacksused: expericencetechstacks,
+        douments: CertificateLink,
+        findid: localStorage.getItem("userid"),
+      })
+      .then((result) => {
+        if (stateChange === false) {
+          setStateChange(true);
+        } else {
+          setStateChange(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setexperienceShow(false);
+  };
+  useEffect(() => {
+    const api = "http://localhost:5000/api/experience/get";
+    axios
+      .post(api, {
+        findid: localStorage.getItem("userid"),
+      })
+      .then((result) => {
+        setExperiencearr(result.data.Data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [stateChange, experiencearr]);
+
+  /*
+  EXPERIENCE : Section END:----------------------------------------------------
+  */
+  const [projectTempImage, setProjectTempImage] = useState("");
+  const [upload, setUpload] = useState(false);
+  const [imageUpload, setImageUpload] = useState("");
+  const [picshow, setpicShow] = useState(false);
+  const handleClose = () => setpicShow(false);
+  const handleShow = () => setpicShow(true);
+  const [state, setState] = useState(false);
   const [name, setName] = useState("");
   const [currentTitle, setCurrentTitle] = useState("");
   const [aboutme, setAboutme] = useState("");
   const [collegeName, setCollegeName] = useState("");
   const [description, setDescription] = useState("");
+  const [picture, setPicture] = useState("");
   const [loader, setLoader] = useState(false);
-  useEffect(() => {
-    axios
-      .post("http://localhost:5000/api/homepage/get/data", {
-        findid: localStorage.getItem("userid"),
-      })
-      .then((result) => {
-        console.log("gg");
-        result = result.data.data;
-        setName(result.Name);
-        setCurrentTitle(result.currentTitle);
-        setAboutme(result.aboutme);
-        setCollegeName(result.collegeData.name);
-        setDescription(result.collegeData.description);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
   const [projectshow, projectsetShow] = useState(false);
+  const [projectAddName, setProjectAddName] = useState("");
+  const [projectAddDesc, setProjectAddDesc] = useState("");
+  const [projectAddPic, setProjectAddPic] = useState("");
+  const [projectAddLink, setProjectAddLink] = useState("");
+  const [projectAddTechStacks, setProjectAddTechStacks] = useState("");
+  const [editshow, setEditShow] = useState(false);
+  const [bool, setbool] = useState(true);
+  var [projectArray, setProjectArray] = useState([]);
+  const [projectEditName, setProjectEditName] = useState("");
+  const [projectEditDesc, setProjectEditDesc] = useState("");
+  const [projectEditPic, setProjectEditPic] = useState("");
+  const [projectEditLink, setProjectEditLink] = useState("");
+  const [projectEditTechStacks, setProjectEditTechStacks] = useState("");
+  const editHandleShow = (e) => {
+    e.preventDefault();
+    setEditShow(true);
+  };
+  const editHandleClose = (event) => {
+    //event.preventDefault();
+    setEditShow(false);
+  };
   const projecthandleShow = (event) => {
     event.preventDefault();
     projectsetShow(true);
@@ -46,18 +117,130 @@ function Dashboard() {
     //event.preventDefault();
     projectsetShow(false);
   };
-  const [projectAddName, setProjectAddName] = useState("");
-  const [projectAddDesc, setProjectAddDesc] = useState("");
-  const [projectAddPic, setProjectAddPic] = useState("");
-  const [projectAddLink, setProjectAddLink] = useState("");
-  const [projectAddTechStacks, setProjectAddTechStacks] = useState("");
+  useEffect(() => {
+    axios
+      .post("http://localhost:5000/api/homepage/get/data", {
+        findid: localStorage.getItem("userid"),
+      })
+      .then((result) => {
+        if (result.data.data === null) {
+          setState(true);
+        }
+
+        result = result.data.data;
+        setName(result.Name);
+        setCurrentTitle(result.currentTitle);
+        setAboutme(result.aboutme);
+        setCollegeName(result.collegeData.name);
+        setDescription(result.collegeData.description);
+        if (result.picture !== null) {
+          setPicture(result.picture);
+        } else {
+          setPicture(
+            "https://res.cloudinary.com/dkeiewkz6/image/upload/v1650937444/ykjfqvinxyctr1q4v0mh.png"
+          );
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [bool, upload]);
+
+  const ProjectImageHandlerUpdate = async (e) => {
+    e.preventDefault();
+    setUpload(true);
+    const formData = new FormData();
+    formData.append("file", projectTempImage);
+    formData.append("upload_preset", "CheggClone");
+    formData.append("cloud_name", "dkeiewkz6");
+    await fetch("https://api.cloudinary.com/v1_1/dkeiewkz6/image/upload", {
+      method: "post",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setProjectEditPic(data.url);
+        setUpload(false);
+        // axios
+        //   .post("http://localhost:5000/api/projects/update", {
+        //     findid: localStorage.getItem("userid"),
+        //     Name: projectAddName,
+        //     link: projectAddLink,
+        //     pic: data.url,
+        //     description: projectAddDesc,
+        //     techstacks: projectAddTechStacks,
+        //     projectid: localStorage.getItem("editprojectid"),
+        //   })
+        //   .then((result) => {
+        //     console.log(result);
+        //     setUpload(false);
+        //     if (loader === false) {
+        //       setLoader(true);
+        //     } else {
+        //       setLoader(false);
+        //     }
+        //     if (bool === false) {
+        //       setbool(true);
+        //     } else {
+        //       setbool(false);
+        //     }
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
+        // projectsetShow(false);
+      });
+  };
+  const ProjectImageHandler = async (e) => {
+    e.preventDefault();
+    setUpload(true);
+    const formData = new FormData();
+    formData.append("file", projectTempImage);
+    formData.append("upload_preset", "CheggClone");
+    formData.append("cloud_name", "dkeiewkz6");
+    await fetch("https://api.cloudinary.com/v1_1/dkeiewkz6/image/upload", {
+      method: "post",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setProjectEditPic(data.url);
+        axios
+          .post("http://localhost:5000/api/projects/add", {
+            findid: localStorage.getItem("userid"),
+            Name: projectAddName,
+            link: projectAddLink,
+            pic: data.url,
+            description: projectAddDesc,
+            techstacks: projectAddTechStacks,
+          })
+          .then((result) => {
+            console.log(result);
+            setUpload(false);
+            if (loader === false) {
+              setLoader(true);
+            } else {
+              setLoader(false);
+            }
+            if (bool === false) {
+              setbool(true);
+            } else {
+              setbool(false);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        projectsetShow(false);
+      });
+  };
   const projecthandleCloseWithSave = () => {
     axios
       .post("http://localhost:5000/api/projects/add", {
         findid: localStorage.getItem("userid"),
         Name: projectAddName,
         link: projectAddLink,
-        pic: "www.img122.src",
+        pic: picture,
         description: projectAddDesc,
         techstacks: projectAddTechStacks,
       })
@@ -79,15 +262,7 @@ function Dashboard() {
       });
     projectsetShow(false);
   };
-  const [editshow, setEditShow] = useState(false);
-  const editHandleShow = (e) => {
-    e.preventDefault();
-    setEditShow(true);
-  };
-  const editHandleClose = (event) => {
-    //event.preventDefault();
-    setEditShow(false);
-  };
+
   const editHandleCloseWithSave = () => {
     const api = "http://localhost:5000/api/projects/update";
     axios
@@ -98,6 +273,7 @@ function Dashboard() {
         findid: localStorage.getItem("userid"),
         techstacks: projectEditTechStacks,
         projectid: localStorage.getItem("editprojectid"),
+        pic: projectEditPic,
       })
       .then((result) => {
         console.log(result);
@@ -117,13 +293,7 @@ function Dashboard() {
       });
     setEditShow(false);
   };
-  const [bool, setbool] = useState(true);
-  var [projectArray, setProjectArray] = useState([]);
-  const [projectEditName, setProjectEditName] = useState("");
-  const [projectEditDesc, setProjectEditDesc] = useState("");
-  const [projectEditPic, setProjectEditPic] = useState("");
-  const [projectEditLink, setProjectEditLink] = useState("");
-  const [projectEditTechStacks, setProjectEditTechStacks] = useState("");
+
   useEffect(() => {
     axios
       .post("http://localhost:5000/api/projects/get", {
@@ -151,40 +321,132 @@ function Dashboard() {
         setProjectEditTechStacks(result.techstacks);
         setTimeout(() => {}, 3000);
         setLoader(false);
-        
       })
       .catch((err) => {
         console.log(err);
       });
   }, [bool, loader]);
+  const HandlerFunction = async (e) => {
+    setUpload(true);
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", imageUpload);
+    formData.append("upload_preset", "CheggClone");
+    formData.append("cloud_name", "dkeiewkz6");
+    await fetch("https://api.cloudinary.com/v1_1/dkeiewkz6/image/upload", {
+      method: "post",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (picture === "") {
+          axios
+            .post("http://localhost:5000/api/homepage/add/data", {
+              Name: name,
+              currentTitle: currentTitle,
+              aboutme: aboutme,
+              picture: data.url,
+              collegeData: {
+                name: collegeName,
+                description: description,
+                startingDate: "20-06-2020",
+                endingDate: "Present",
+              },
+              findid: localStorage.getItem("userid"),
+              resume: "www.djdjdj.com",
+            })
+            .then((result) => {
+              console.log(result);
+              setUpload(false);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          axios
+            .post("http://localhost:5000/api/homepage/update/data", {
+              Name: name,
+              currentTitle: currentTitle,
+              aboutme: aboutme,
+              picture: data.url,
+              collegeData: {
+                name: collegeName,
+                description: description,
+                startingDate: "20-06-2020",
+                endingDate: "Present",
+              },
+              findid: localStorage.getItem("userid"),
+              resume: "www.djdjdj.com",
+            })
+            .then((result) => {
+              console.log(result);
 
+              setUpload(false);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+        console.log(data);
+      });
+  };
   const updateUserInfoHandle = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:5000/api/homepage/update/data", {
-        Name: name,
-        currentTitle: currentTitle,
-        aboutme: aboutme,
-        picture: "img/1src",
-        collegeData: {
-          name: collegeName,
-          description: description,
-          startingDate: "20-06-2020",
-          endingDate: "Present",
-        },
-        findid: localStorage.getItem("userid"),
-        resume: "www.djdjdj.com",
-      })
-      .then((result) => {
-        if (bool === true) {
-          setbool(false);
-        } else {
-          setbool(true);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (state === true) {
+      axios
+        .post("http://localhost:5000/api/homepage/add/data", {
+          Name: name,
+          currentTitle: currentTitle,
+          aboutme: aboutme,
+          picture: picture,
+          collegeData: {
+            name: collegeName,
+            description: description,
+            startingDate: "20-06-2020",
+            endingDate: "Present",
+          },
+          findid: localStorage.getItem("userid"),
+          resume: "www.djdjdj.com",
+        })
+        .then((result) => {
+          if (bool === true) {
+            setbool(false);
+            console.log(result);
+          } else {
+            setbool(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      setState(false);
+    } else {
+      axios
+        .post("http://localhost:5000/api/homepage/update/data", {
+          Name: name,
+          currentTitle: currentTitle,
+          aboutme: aboutme,
+          picture: picture,
+          collegeData: {
+            name: collegeName,
+            description: description,
+            startingDate: "20-06-2020",
+            endingDate: "Present",
+          },
+          findid: localStorage.getItem("userid"),
+          resume: "www.djdjdj.com",
+        })
+        .then((result) => {
+          if (bool === true) {
+            setbool(false);
+          } else {
+            setbool(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
   return (
     <>
@@ -204,6 +466,56 @@ function Dashboard() {
             >
               About YourSelf
             </h3>
+
+            <div className="Picture">
+              <img className="Picture-User" src={picture}></img>
+              <FiEdit2 onClick={handleShow} style={{ cursor: "pointer" }} />
+            </div>
+
+            <Modal show={picshow} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title className="Top-Heading">Upload Image</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="Upload-Image-Section">
+                  <input
+                    type="file"
+                    name="fileToUpload"
+                    id="fileToUpload"
+                    onChange={(e) => {
+                      setImageUpload(e.target.files[0]);
+                    }}
+                  ></input>
+                </div>
+                <br />
+                <div className="Upload-Image-Section">
+                  <BsUpload size={20} onClick={HandlerFunction} />
+                  <p className="Temp-Para">Upload Image</p>
+                </div>
+                {upload ? (
+                  <>
+                    <div className="Temp">
+                      <ProgressBar
+                        width="230"
+                        trackWidth="13"
+                        percentage="90"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </Modal.Body>
+              <Modal.Footer>
+                <button
+                  className="HomePage-Go"
+                  style={{ width: "120px", marginTop: "20px" }}
+                  onClick={handleClose}
+                >
+                  Close
+                </button>
+              </Modal.Footer>
+            </Modal>
             <div className="form-group mt-3">
               <label>Name💤</label>
               <input
@@ -314,7 +626,6 @@ function Dashboard() {
                           e.preventDefault();
                           console.log(project._id);
                           localStorage.setItem("editprojectid", project._id);
-
                           setLoader(true);
                           setEditShow(true);
                         }}
@@ -412,6 +723,38 @@ function Dashboard() {
                     }}
                   />
                 </div>
+                <br />
+                <label>Project Image 😍</label>
+                <br />
+                <br />
+                <div className="Upload-Image-Section">
+                  <input
+                    type="file"
+                    name="fileToUpload"
+                    id="fileToUpload"
+                    onChange={(e) => {
+                      setProjectTempImage(e.target.files[0]);
+                    }}
+                  ></input>
+                </div>
+                <br />
+                <div className="Upload-Image-Section">
+                  <BsUpload size={20} onClick={ProjectImageHandler} />
+                  <p className="Temp-Para">Upload Image</p>
+                </div>
+                {upload ? (
+                  <>
+                    <div className="Temp">
+                      <ProgressBar
+                        width="230"
+                        trackWidth="13"
+                        percentage="90"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Modal.Body>
               <Modal.Footer>
                 <button
@@ -446,7 +789,7 @@ function Dashboard() {
                 ) : (
                   <>
                     <div className="form-group mt-3">
-                      <label>Name Of Project 🔫</label>
+                      <label>Update Name Of Project 🔫</label>
                       <input
                         type="text"
                         className="form-control mt-1"
@@ -458,7 +801,7 @@ function Dashboard() {
                       />
                     </div>
                     <div className="form-group mt-3">
-                      <label>Add Link 🎁</label>
+                      <label>Update Link 🎁</label>
                       <input
                         type="text"
                         className="form-control mt-1"
@@ -470,7 +813,7 @@ function Dashboard() {
                       />
                     </div>
                     <div className="form-group mt-3">
-                      <label>Add Description 🔥</label>
+                      <label>Update Description 🔥</label>
                       <Form.Control
                         as="textarea"
                         placeholder="Describe Project"
@@ -482,7 +825,7 @@ function Dashboard() {
                       />
                     </div>
                     <div className="form-group mt-3">
-                      <label>TechStacks Used 🚗</label>
+                      <label>Update TechStacks Used 🚗</label>
                       <Form.Control
                         as="textarea"
                         placeholder="Like ReactJS, MERN, NODE,..."
@@ -494,6 +837,38 @@ function Dashboard() {
                       />
                     </div>
                   </>
+                )}
+                <br />
+                <label>Update Project Image 😍</label>
+                <br />
+                <br />
+                <div className="Upload-Image-Section">
+                  <input
+                    type="file"
+                    name="fileToUpload"
+                    id="fileToUpload"
+                    onChange={(e) => {
+                      setProjectTempImage(e.target.files[0]);
+                    }}
+                  ></input>
+                </div>
+                <br />
+                <div className="Upload-Image-Section">
+                  <BsUpload size={20} onClick={ProjectImageHandlerUpdate} />
+                  <p className="Temp-Para">Upload Image</p>
+                </div>
+                {upload ? (
+                  <>
+                    <div className="Temp">
+                      <ProgressBar
+                        width="230"
+                        trackWidth="13"
+                        percentage="90"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <></>
                 )}
               </Modal.Body>
               <Modal.Footer>
@@ -513,8 +888,195 @@ function Dashboard() {
                 </button>
               </Modal.Footer>
             </Modal>
-            <div className="d-grid gap-2 mt-3">
-              <button type="submit" className="btn btn-primary">
+
+            <h3
+              className="Top-Heading"
+              style={{ fontSize: "20px", marginTop: "20px" }}
+            >
+              Experience
+            </h3>
+            <br />
+            <br />
+            {experiencearr.map((experience, index) => {
+              return (
+                <div className="Temp">
+                  <Card
+                    style={{
+                      width: "15rem",
+                      borderRadius: "30px",
+                      border: "2px solid black",
+                      margin: "20px",
+                    }}
+                  >
+                    <Card.Img variant="top" src="" />
+                    <div className="TypeOfExperience">
+                      <label>{experience.type}</label>
+                    </div>
+                    <Card.Body>
+                      <Card.Title>Company : {experience.company}</Card.Title>
+                      <Card.Text>Duration : {experience.duration}</Card.Text>
+                      <Card.Text>
+                        Description : {experience.description}
+                      </Card.Text>
+
+                      <Card.Text>
+                        TechStacks : {experience.techstacksused}
+                      </Card.Text>
+                      <Card.Text>
+                        Document : <FcDocument />
+                        {experience.douments}
+                      </Card.Text>
+                      <button
+                        className="HomePage-Go"
+                        style={{ width: "90px", margin: "10px" }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                        }}
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        className="HomePage-Go"
+                        style={{ width: "90px", backgroundColor: "red" }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          axios
+                            .post(
+                              "http://localhost:5000/api/experience/delete",
+                              {
+                                id: experience._id,
+                              }
+                            )
+                            .then((result) => {
+                              if (stateChange === false) {
+                                setState(true);
+                              } else {
+                                setState(false);
+                              }
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </Card.Body>
+                  </Card>
+                  <br />
+                  <br />
+                </div>
+              );
+            })}
+            <Modal show={experienceshow} onHide={handleexperienceClose}>
+              <Modal.Header closeButton>
+                <Modal.Title className="Top-Heading">
+                  Add Experience
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="form-group mt-3">
+                  <label>Type 👑</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="Intern,SDE,.."
+                    onChange={(e) => {
+                      setExperienceType(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Company Name 🔫</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="Amazon,Google,..."
+                    onChange={(e) => {
+                      setCompanyName(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Duration of Experience 🎁</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="3 months,6 months, ..."
+                    onChange={(e) => {
+                      setDuration(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Add Description 🔥</label>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="Describe Your Experiences,.."
+                    rows={3}
+                    onChange={(e) => {
+                      setexperienceDescription(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>TechStacks Used 🚗</label>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="Like ReactJS, MERN, NODE,..."
+                    rows={3}
+                    onChange={(e) => {
+                      setExperienceTechStacks(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Certificate/Offer Letter Link</label>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="GDrive Link...🔥"
+                    rows={3}
+                    onChange={(e) => {
+                      setCertificateLink(e.target.value);
+                    }}
+                  />
+                </div>
+                <br />
+              </Modal.Body>
+              <Modal.Footer>
+                <button
+                  className="HomePage-Go"
+                  style={{ width: "70px" }}
+                  onClick={handleexperienceClose}
+                >
+                  Close
+                </button>
+                <button
+                  className="HomePage-Go"
+                  style={{ width: "70px" }}
+                  onClick={handleexperienceClosewithSave}
+                >
+                  Save Changes
+                </button>
+              </Modal.Footer>
+            </Modal>
+            <button
+              className="HomePage-Go"
+              style={{ width: "120px", marginTop: "20px" }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleexperienceShow();
+              }}
+            >
+              Add Experience
+            </button>
+            <div className="Temp">
+              <button
+                type="submit"
+                className="HomePage-Go"
+                style={{ width: "300px", marginTop: "20px" }}
+              >
                 Deploy
               </button>
             </div>

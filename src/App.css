@@ -149,3 +149,36 @@ label {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   margin-left: 20px;
 }
+.Picture {
+  display: flex;
+  justify-content: center;
+}
+.Picture-User {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  border: 3px solid rgb(2, 2, 1);
+}
+.Upload-Image-Section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Temp {
+  display: flex;
+  justify-content: center;
+}
+
+.Temp-Para {
+  font-family: "Mouse Memoirs", sans-serif;
+}
+.TypeOfExperience {
+  display: flex;
+  justify-content: center;
+  margin-right: 10px;
+  background-color: #00D7FF;
+  width: 100px;
+  border-radius: 28px;
+  padding: 10px;
+  border: 2px solid rgb(2, 2, 1);
+}
