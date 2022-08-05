@@ -14,7 +14,7 @@ function Homepage() {
       <div className="App">
         <div className="TopSection">
           <div className="LogoutSection">
-            {userid.length > 0 ? (
+            {userid !== null ? (
               <>
                 <button
                   className="Top-Heading-Button-Login"
