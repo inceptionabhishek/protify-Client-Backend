@@ -24,7 +24,7 @@ function App() {
   return (
     <>
       <Routes>
-        {findid.length > 0 ? (
+        {findid !== null && findid.length > 0 ? (
           <>
             {" "}
             <Route path="/" element={<Homepage />} />
