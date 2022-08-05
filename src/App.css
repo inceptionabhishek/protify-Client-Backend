@@ -176,9 +176,30 @@ label {
   display: flex;
   justify-content: center;
   margin-right: 10px;
-  background-color: #00D7FF;
+  background-color: #00d7ff;
   width: 100px;
   border-radius: 28px;
   padding: 10px;
   border: 2px solid rgb(2, 2, 1);
+}
+
+.LinksClass {
+  margin: 20px;
+  background-color: #070a0a;
+  color: #f2d7d9;
+  padding: 20px;
+  border-radius: 20px;
+  border-bottom: 30px solid #eee;
+  border-left: 30px solid #272822; /*Set to background color, not transparent!*/
+  -webkit-box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.3);
+}
+
+.links-icons {
+  background-color: #76ba99;
+}
+.links-contain {
+  display: flex;
+  justify-content: end;
 }

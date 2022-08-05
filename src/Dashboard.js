@@ -1,4 +1,6 @@
 import React from "react";
+import { GrEdit } from "react-icons/gr";
+import { AiFillDelete } from "react-icons/ai";
 import ProgressBar from "react-animated-progress-bar";
 import Spinner from "react-bootstrap/Spinner";
 import { Container } from "react-bootstrap";
@@ -17,6 +19,52 @@ import { FiEdit2 } from "react-icons/fi";
 import { BsUpload } from "react-icons/bs";
 import { FcDocument } from "react-icons/fc";
 function Dashboard() {
+  const [stateChange, setStateChange] = useState(false);
+  /*
+  LINKS : section START : ------------------------------------------------------
+  */
+  const [Linksarr, setLinksArr] = useState([]);
+  const [linkname, setLinksName] = useState("");
+  const [link, setlink] = useState("");
+  const [linkshow, setlinkShow] = useState(false);
+  const handlelinkClose = () => setlinkShow(false);
+  const handlelinkShow = () => setlinkShow(true);
+  const handlelinkClosewithsave = () => {
+    axios
+      .post("http://localhost:5000/api/links/add", {
+        findid: localStorage.getItem("userid"),
+        Name: linkname,
+        link: link,
+        pic: "www.img1.src",
+      })
+      .then((result) => {
+        if (stateChange === false) {
+          setStateChange(true);
+        } else {
+          setStateChange(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setlinkShow(false);
+  };
+  useEffect(() => {
+    axios
+      .post("http://localhost:5000/api/links/get", {
+        findid: localStorage.getItem("userid"),
+      })
+      .then((result) => {
+        setLinksArr(result.data.Data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [Linksarr, stateChange]);
+
+  /*
+  LINKS : section END : ------------------------------------------------------
+  */
   /*
   EXPERIENCE : Section START:----------------------------------------------------
   */
@@ -30,7 +78,40 @@ function Dashboard() {
   const [experiencedescription, setexperienceDescription] = useState("");
   const [expericencetechstacks, setExperienceTechStacks] = useState("");
   const [CertificateLink, setCertificateLink] = useState("");
-  const [stateChange, setStateChange] = useState(false);
+
+  const [experienceeditshow, setexperienceeditShow] = useState(false);
+  const handleexperienceeditClose = () => setexperienceeditShow(false);
+  const handleexperienceeditShow = () => setexperienceeditShow(true);
+  const [experienceeditType, setExperienceeditType] = useState("");
+  const [companyedit, setcompanyedit] = useState("");
+  const [durationedit, setdurationedit] = useState("");
+  const [experiencedescriptionedit, setexperienceDescriptionedit] =
+    useState("");
+  const [experienceedittechstacks, setExperienceEditTechstacks] = useState("");
+  const [Certificatelinkedit, setcertificatelinkdedit] = useState("");
+
+  const handleexperienceeditClosewithSave = () => {
+    axios
+      .post("http://localhost:5000/api/experience/update", {
+        type: experienceeditType,
+        company: companyedit,
+        duration: durationedit,
+        startingDate: "12-12-2021",
+        endingDate: "present",
+        description: experiencedescriptionedit,
+        techstacksused: experienceedittechstacks,
+        douments: Certificatelinkedit,
+        findid: localStorage.getItem("userid"),
+        experienceid: localStorage.getItem("experienceeditid"),
+      })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setexperienceeditShow(false);
+  };
   const handleexperienceClosewithSave = () => {
     axios
       .post("http://localhost:5000/api/experience/add", {
@@ -145,7 +226,25 @@ function Dashboard() {
         console.log(err);
       });
   }, [bool, upload]);
-
+  useEffect(() => {
+    axios
+      .post("http://localhost:5000/api/experience/get/single", {
+        experienceid: localStorage.getItem("experienceeditid"),
+      })
+      .then((result) => {
+        console.log("experinence", result);
+        setcompanyedit(result.data.company);
+        setExperienceeditType(result.data.type);
+        setexperienceDescriptionedit(result.data.description);
+        setdurationedit(result.data.duration);
+        setExperienceEditTechstacks(result.data.techstacksused);
+        setcertificatelinkdedit(result.data.douments);
+        setLoader(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [loader]);
   const ProjectImageHandlerUpdate = async (e) => {
     e.preventDefault();
     setUpload(true);
@@ -542,9 +641,8 @@ function Dashboard() {
             </div>
             <div className="form-group mt-3">
               <label>About Me😎</label>
-              <input
-                type="text"
-                className="form-control mt-1"
+              <Form.Control
+                as="textarea"
                 placeholder="Write about Your self"
                 value={aboutme}
                 onChange={(e) => {
@@ -896,7 +994,6 @@ function Dashboard() {
               Experience
             </h3>
             <br />
-            <br />
             {experiencearr.map((experience, index) => {
               return (
                 <div className="Temp">
@@ -931,6 +1028,12 @@ function Dashboard() {
                         style={{ width: "90px", margin: "10px" }}
                         onClick={(e) => {
                           e.preventDefault();
+                          localStorage.setItem(
+                            "experienceeditid",
+                            experience._id
+                          );
+                          setLoader(true);
+                          setexperienceeditShow(true);
                         }}
                       >
                         Edit
@@ -1061,15 +1164,209 @@ function Dashboard() {
                 </button>
               </Modal.Footer>
             </Modal>
+            <Modal show={experienceeditshow} onHide={handleexperienceeditClose}>
+              <Modal.Header closeButton>
+                <Modal.Title className="Top-Heading">
+                  Edit Experience
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="form-group mt-3">
+                  <label>Edit Type 👑</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="Intern,SDE,.."
+                    onChange={(e) => {
+                      setExperienceeditType(e.target.value);
+                    }}
+                    value={experienceeditType}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Edit Company Name 🔫</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="Amazon,Google,..."
+                    onChange={(e) => {
+                      setcompanyedit(e.target.value);
+                    }}
+                    value={companyedit}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Edit Duration of Experience 🎁</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="3 months,6 months, ..."
+                    onChange={(e) => {
+                      setdurationedit(e.target.value);
+                    }}
+                    value={durationedit}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Edit Description 🔥</label>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="Describe Your Experiences,.."
+                    rows={3}
+                    onChange={(e) => {
+                      setexperienceDescriptionedit(e.target.value);
+                    }}
+                    value={experiencedescriptionedit}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Edit TechStacks Used 🚗</label>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="Like ReactJS, MERN, NODE,..."
+                    rows={3}
+                    onChange={(e) => {
+                      setExperienceEditTechstacks(e.target.value);
+                    }}
+                    value={experienceedittechstacks}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Edit Certificate/Offer Letter Link</label>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="GDrive Link...🔥"
+                    rows={3}
+                    onChange={(e) => {
+                      setcertificatelinkdedit(e.target.value);
+                    }}
+                    value={Certificatelinkedit}
+                  />
+                </div>
+                <br />
+              </Modal.Body>
+              <Modal.Footer>
+                <button
+                  className="HomePage-Go"
+                  style={{ width: "70px" }}
+                  onClick={handleexperienceeditClose}
+                >
+                  Close
+                </button>
+                <button
+                  className="HomePage-Go"
+                  style={{ width: "70px" }}
+                  onClick={handleexperienceeditClosewithSave}
+                >
+                  Save Changes
+                </button>
+              </Modal.Footer>
+            </Modal>
             <button
               className="HomePage-Go"
-              style={{ width: "120px", marginTop: "20px" }}
+              style={{ width: "120px", marginTop: "10px" }}
               onClick={(e) => {
                 e.preventDefault();
                 handleexperienceShow();
               }}
             >
               Add Experience
+            </button>
+            <h3
+              className="Top-Heading"
+              style={{ fontSize: "20px", marginTop: "20px" }}
+            >
+              Links
+            </h3>
+            {Linksarr.map((link, index) => {
+              return (
+                <>
+                  <div className="LinksClass">
+                    <div className="links-contain">
+                      <AiFillDelete
+                        size={30}
+                        style={{ color: "#D1512D", cursor: "pointer" }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          axios
+                            .post("http://localhost:5000/api/links/delete", {
+                              id: link._id,
+                            })
+                            .then((result) => {
+                              if (stateChange === false) {
+                                setStateChange(true);
+                              } else {
+                                setStateChange(false);
+                              }
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                            });
+                        }}
+                      />
+                    </div>
+                    Name : {link.Name}
+                    <br />
+                    Link : {link.link}
+                    <br />
+                  </div>
+                </>
+              );
+            })}
+            <Modal show={linkshow} onHide={handlelinkClose}>
+              <Modal.Header closeButton>
+                <Modal.Title className="Top-Heading">Add Links</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="form-group mt-3">
+                  <label> Link Name 👑</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="Codechef,Codeforces.."
+                    onChange={(e) => {
+                      setLinksName(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Link 🔫</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="www.codechef.com/tourist.."
+                    onChange={(e) => {
+                      setlink(e.target.value);
+                    }}
+                  />
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <button
+                  className="HomePage-Go"
+                  style={{ width: "70px" }}
+                  onClick={handlelinkClose}
+                >
+                  Close
+                </button>
+                <button
+                  className="HomePage-Go"
+                  style={{ width: "70px" }}
+                  onClick={handlelinkClosewithsave}
+                >
+                  Save Changes
+                </button>
+              </Modal.Footer>
+            </Modal>
+            <button
+              className="HomePage-Go"
+              style={{ width: "120px", marginTop: "20px" }}
+              onClick={(e) => {
+                e.preventDefault();
+                setlinkShow(true);
+              }}
+            >
+              Add Link
             </button>
             <div className="Temp">
               <button
