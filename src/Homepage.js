@@ -14,7 +14,7 @@ function Homepage() {
       <div className="App">
         <div className="TopSection">
           <div className="LogoutSection">
-            {userid !== null ? (
+            {userid !== "" ? (
               <>
                 <button
                   className="Top-Heading-Button-Login"
@@ -38,7 +38,7 @@ function Homepage() {
             <br /> Bruh, Just Follow Some step, ... Bingo!You have your
             portfolio ready.
           </p>
-          {userid.length > 0 ? (
+          {userid !== "" ? (
             <>
               <Link to={"/dashboard/" + userid}>
                 <button className="Top-Heading-Button-Login">Dashboard</button>
