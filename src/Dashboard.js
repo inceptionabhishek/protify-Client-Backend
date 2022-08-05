@@ -23,6 +23,7 @@ function Dashboard() {
   /*
   LINKS : section START : ------------------------------------------------------
   */
+  const [getDataLoader, setgetDataLoader] = useState(true);
   const [Linksarr, setLinksArr] = useState([]);
   const [linkname, setLinksName] = useState("");
   const [link, setlink] = useState("");
