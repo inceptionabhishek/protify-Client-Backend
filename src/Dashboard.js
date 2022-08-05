@@ -706,74 +706,78 @@ function Dashboard() {
             >
               Projects
             </h3>
-            {projectArray.length > 0 ? (
+            {projectArray !== null && projectArray.length > 0 ? (
               <>
                 <p className="hint">Added Projects</p>
               </>
             ) : (
               <></>
             )}
-            {projectArray.map((project, index) => {
-              return (
-                <>
-                  <Card style={{ width: "18rem" }}>
-                    <Card.Img variant="top" src={project.pic} />
-                    <Card.Body>
-                      <Card.Title>Name : {project.Name}</Card.Title>
-                      <Card.Text>Description : {project.description}</Card.Text>
-                      <Card.Text>Link : {project.link}</Card.Text>
-                      <Card.Text>TechStacks : {project.techstacks}</Card.Text>
-                      <button
-                        className="HomePage-Go"
-                        style={{ width: "90px" }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          console.log(project._id);
-                          localStorage.setItem("editprojectid", project._id);
-                          setLoader(true);
-                          setEditShow(true);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="HomePage-Go"
-                        style={{ width: "90px", backgroundColor: "red" }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          axios
-                            .post(
-                              "https://portifybackend.herokuapp.com/api/projects/delete",
-                              {
-                                id: project._id,
-                              }
-                            )
-                            .then((result) => {
-                              console.log(result);
-                              if (loader === false) {
-                                setLoader(true);
-                              } else {
-                                setLoader(false);
-                              }
-                              if (bool === false) {
-                                setbool(true);
-                              } else {
-                                setbool(false);
-                              }
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                            });
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </Card.Body>
-                  </Card>
-                  <br />
-                </>
-              );
-            })}
+            {projectArray !== null &&
+              projectArray.length > 0 &&
+              projectArray.map((project, index) => {
+                return (
+                  <>
+                    <Card style={{ width: "18rem" }}>
+                      <Card.Img variant="top" src={project.pic} />
+                      <Card.Body>
+                        <Card.Title>Name : {project.Name}</Card.Title>
+                        <Card.Text>
+                          Description : {project.description}
+                        </Card.Text>
+                        <Card.Text>Link : {project.link}</Card.Text>
+                        <Card.Text>TechStacks : {project.techstacks}</Card.Text>
+                        <button
+                          className="HomePage-Go"
+                          style={{ width: "90px" }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            console.log(project._id);
+                            localStorage.setItem("editprojectid", project._id);
+                            setLoader(true);
+                            setEditShow(true);
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="HomePage-Go"
+                          style={{ width: "90px", backgroundColor: "red" }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            axios
+                              .post(
+                                "https://portifybackend.herokuapp.com/api/projects/delete",
+                                {
+                                  id: project._id,
+                                }
+                              )
+                              .then((result) => {
+                                console.log(result);
+                                if (loader === false) {
+                                  setLoader(true);
+                                } else {
+                                  setLoader(false);
+                                }
+                                if (bool === false) {
+                                  setbool(true);
+                                } else {
+                                  setbool(false);
+                                }
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </Card.Body>
+                    </Card>
+                    <br />
+                  </>
+                );
+              })}
             <button
               className="HomePage-Go"
               style={{ width: "120px", marginTop: "20px" }}
@@ -1003,84 +1007,86 @@ function Dashboard() {
               Experience
             </h3>
             <br />
-            {experiencearr.map((experience, index) => {
-              return (
-                <div className="Temp">
-                  <Card
-                    style={{
-                      width: "15rem",
-                      borderRadius: "30px",
-                      border: "2px solid black",
-                      margin: "20px",
-                    }}
-                  >
-                    <Card.Img variant="top" src="" />
-                    <div className="TypeOfExperience">
-                      <label>{experience.type}</label>
-                    </div>
-                    <Card.Body>
-                      <Card.Title>Company : {experience.company}</Card.Title>
-                      <Card.Text>Duration : {experience.duration}</Card.Text>
-                      <Card.Text>
-                        Description : {experience.description}
-                      </Card.Text>
+            {experiencearr !== null &&
+              experiencearr.length > 0 &&
+              experiencearr.map((experience, index) => {
+                return (
+                  <div className="Temp">
+                    <Card
+                      style={{
+                        width: "15rem",
+                        borderRadius: "30px",
+                        border: "2px solid black",
+                        margin: "20px",
+                      }}
+                    >
+                      <Card.Img variant="top" src="" />
+                      <div className="TypeOfExperience">
+                        <label>{experience.type}</label>
+                      </div>
+                      <Card.Body>
+                        <Card.Title>Company : {experience.company}</Card.Title>
+                        <Card.Text>Duration : {experience.duration}</Card.Text>
+                        <Card.Text>
+                          Description : {experience.description}
+                        </Card.Text>
 
-                      <Card.Text>
-                        TechStacks : {experience.techstacksused}
-                      </Card.Text>
-                      <Card.Text>
-                        Document : <FcDocument />
-                        {experience.douments}
-                      </Card.Text>
-                      <button
-                        className="HomePage-Go"
-                        style={{ width: "90px", margin: "10px" }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          localStorage.setItem(
-                            "experienceeditid",
-                            experience._id
-                          );
-                          setLoader(true);
-                          setexperienceeditShow(true);
-                        }}
-                      >
-                        Edit
-                      </button>
+                        <Card.Text>
+                          TechStacks : {experience.techstacksused}
+                        </Card.Text>
+                        <Card.Text>
+                          Document : <FcDocument />
+                          {experience.douments}
+                        </Card.Text>
+                        <button
+                          className="HomePage-Go"
+                          style={{ width: "90px", margin: "10px" }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            localStorage.setItem(
+                              "experienceeditid",
+                              experience._id
+                            );
+                            setLoader(true);
+                            setexperienceeditShow(true);
+                          }}
+                        >
+                          Edit
+                        </button>
 
-                      <button
-                        className="HomePage-Go"
-                        style={{ width: "90px", backgroundColor: "red" }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          axios
-                            .post(
-                              "http://localhost:5000/api/experience/delete",
-                              {
-                                id: experience._id,
-                              }
-                            )
-                            .then((result) => {
-                              if (stateChange === false) {
-                                setState(true);
-                              } else {
-                                setState(false);
-                              }
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                            });
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </Card.Body>
-                  </Card>
-                  <br />
-                  <br />
-                </div>
-              );
-            })}
+                        <button
+                          className="HomePage-Go"
+                          style={{ width: "90px", backgroundColor: "red" }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            axios
+                              .post(
+                                "https://portifybackend.herokuapp.com/api/experience/delete",
+                                {
+                                  id: experience._id,
+                                }
+                              )
+                              .then((result) => {
+                                if (stateChange === false) {
+                                  setState(true);
+                                } else {
+                                  setState(false);
+                                }
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </Card.Body>
+                    </Card>
+                    <br />
+                    <br />
+                  </div>
+                );
+              })}
             <Modal show={experienceshow} onHide={handleexperienceClose}>
               <Modal.Header closeButton>
                 <Modal.Title className="Top-Heading">
@@ -1287,44 +1293,46 @@ function Dashboard() {
             >
               Links
             </h3>
-            {Linksarr.map((link, index) => {
-              return (
-                <>
-                  <div className="LinksClass">
-                    <div className="links-contain">
-                      <AiFillDelete
-                        size={30}
-                        style={{ color: "#D1512D", cursor: "pointer" }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          axios
-                            .post(
-                              "https://portifybackend.herokuapp.com/api/links/delete",
-                              {
-                                id: link._id,
-                              }
-                            )
-                            .then((result) => {
-                              if (stateChange === false) {
-                                setStateChange(true);
-                              } else {
-                                setStateChange(false);
-                              }
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                            });
-                        }}
-                      />
+            {Linksarr != null &&
+              Linksarr.length > 0 &&
+              Linksarr.map((link, index) => {
+                return (
+                  <>
+                    <div className="LinksClass">
+                      <div className="links-contain">
+                        <AiFillDelete
+                          size={30}
+                          style={{ color: "#D1512D", cursor: "pointer" }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            axios
+                              .post(
+                                "https://portifybackend.herokuapp.com/api/links/delete",
+                                {
+                                  id: link._id,
+                                }
+                              )
+                              .then((result) => {
+                                if (stateChange === false) {
+                                  setStateChange(true);
+                                } else {
+                                  setStateChange(false);
+                                }
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          }}
+                        />
+                      </div>
+                      Name : {link.Name}
+                      <br />
+                      Link : {link.link}
+                      <br />
                     </div>
-                    Name : {link.Name}
-                    <br />
-                    Link : {link.link}
-                    <br />
-                  </div>
-                </>
-              );
-            })}
+                  </>
+                );
+              })}
             <Modal show={linkshow} onHide={handlelinkClose}>
               <Modal.Header closeButton>
                 <Modal.Title className="Top-Heading">Add Links</Modal.Title>
