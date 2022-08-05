@@ -17,7 +17,7 @@ function Login() {
     } else {
       console.log(email, password);
       await axios
-        .post("http://localhost:5000/api/user/login", {
+        .post("https://portifybackend.herokuapp.com/api/user/login", {
           email: email,
           password: password,
         })

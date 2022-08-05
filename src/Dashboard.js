@@ -31,7 +31,7 @@ function Dashboard() {
   const handlelinkShow = () => setlinkShow(true);
   const handlelinkClosewithsave = () => {
     axios
-      .post("http://localhost:5000/api/links/add", {
+      .post("https://portifybackend.herokuapp.com/api/links/add", {
         findid: localStorage.getItem("userid"),
         Name: linkname,
         link: link,
@@ -51,7 +51,7 @@ function Dashboard() {
   };
   useEffect(() => {
     axios
-      .post("http://localhost:5000/api/links/get", {
+      .post("https://portifybackend.herokuapp.com/api/links/get", {
         findid: localStorage.getItem("userid"),
       })
       .then((result) => {
@@ -92,7 +92,7 @@ function Dashboard() {
 
   const handleexperienceeditClosewithSave = () => {
     axios
-      .post("http://localhost:5000/api/experience/update", {
+      .post("https://portifybackend.herokuapp.com/api/experience/update", {
         type: experienceeditType,
         company: companyedit,
         duration: durationedit,
@@ -114,7 +114,7 @@ function Dashboard() {
   };
   const handleexperienceClosewithSave = () => {
     axios
-      .post("http://localhost:5000/api/experience/add", {
+      .post("https://portifybackend.herokuapp.com/api/experience/add", {
         type: experienceType,
         company: companyName,
         duration: duration,
@@ -138,7 +138,7 @@ function Dashboard() {
     setexperienceShow(false);
   };
   useEffect(() => {
-    const api = "http://localhost:5000/api/experience/get";
+    const api = "https://portifybackend.herokuapp.com/api/experience/get";
     axios
       .post(api, {
         findid: localStorage.getItem("userid"),
@@ -200,7 +200,7 @@ function Dashboard() {
   };
   useEffect(() => {
     axios
-      .post("http://localhost:5000/api/homepage/get/data", {
+      .post("https://portifybackend.herokuapp.com/api/homepage/get/data", {
         findid: localStorage.getItem("userid"),
       })
       .then((result) => {
@@ -228,7 +228,7 @@ function Dashboard() {
   }, [bool, upload]);
   useEffect(() => {
     axios
-      .post("http://localhost:5000/api/experience/get/single", {
+      .post("https://portifybackend.herokuapp.com/api/experience/get/single", {
         experienceid: localStorage.getItem("experienceeditid"),
       })
       .then((result) => {
@@ -305,7 +305,7 @@ function Dashboard() {
       .then((data) => {
         setProjectEditPic(data.url);
         axios
-          .post("http://localhost:5000/api/projects/add", {
+          .post("https://portifybackend.herokuapp.com/api/projects/add", {
             findid: localStorage.getItem("userid"),
             Name: projectAddName,
             link: projectAddLink,
@@ -335,7 +335,7 @@ function Dashboard() {
   };
   const projecthandleCloseWithSave = () => {
     axios
-      .post("http://localhost:5000/api/projects/add", {
+      .post("https://portifybackend.herokuapp.com/api/projects/add", {
         findid: localStorage.getItem("userid"),
         Name: projectAddName,
         link: projectAddLink,
@@ -363,7 +363,7 @@ function Dashboard() {
   };
 
   const editHandleCloseWithSave = () => {
-    const api = "http://localhost:5000/api/projects/update";
+    const api = "https://portifybackend.herokuapp.com/api/projects/update";
     axios
       .post(api, {
         Name: projectEditName,
@@ -395,7 +395,7 @@ function Dashboard() {
 
   useEffect(() => {
     axios
-      .post("http://localhost:5000/api/projects/get", {
+      .post("https://portifybackend.herokuapp.com/api/projects/get", {
         findid: localStorage.getItem("userid"),
       })
       .then((result) => {
@@ -407,7 +407,7 @@ function Dashboard() {
       });
   }, [editshow, projectshow, bool, loader]);
   useEffect(() => {
-    const api = "http://localhost:5000/api/projects/get/single";
+    const api = "https://portifybackend.herokuapp.com/api/projects/get/single";
     axios
       .post(api, { projectid: localStorage.getItem("editprojectid") })
       .then((result) => {
@@ -440,20 +440,23 @@ function Dashboard() {
       .then((data) => {
         if (picture === "") {
           axios
-            .post("http://localhost:5000/api/homepage/add/data", {
-              Name: name,
-              currentTitle: currentTitle,
-              aboutme: aboutme,
-              picture: data.url,
-              collegeData: {
-                name: collegeName,
-                description: description,
-                startingDate: "20-06-2020",
-                endingDate: "Present",
-              },
-              findid: localStorage.getItem("userid"),
-              resume: "www.djdjdj.com",
-            })
+            .post(
+              "https://portifybackend.herokuapp.com/api/homepage/add/data",
+              {
+                Name: name,
+                currentTitle: currentTitle,
+                aboutme: aboutme,
+                picture: data.url,
+                collegeData: {
+                  name: collegeName,
+                  description: description,
+                  startingDate: "20-06-2020",
+                  endingDate: "Present",
+                },
+                findid: localStorage.getItem("userid"),
+                resume: "www.djdjdj.com",
+              }
+            )
             .then((result) => {
               console.log(result);
               setUpload(false);
@@ -463,20 +466,23 @@ function Dashboard() {
             });
         } else {
           axios
-            .post("http://localhost:5000/api/homepage/update/data", {
-              Name: name,
-              currentTitle: currentTitle,
-              aboutme: aboutme,
-              picture: data.url,
-              collegeData: {
-                name: collegeName,
-                description: description,
-                startingDate: "20-06-2020",
-                endingDate: "Present",
-              },
-              findid: localStorage.getItem("userid"),
-              resume: "www.djdjdj.com",
-            })
+            .post(
+              "https://portifybackend.herokuapp.com/api/homepage/update/data",
+              {
+                Name: name,
+                currentTitle: currentTitle,
+                aboutme: aboutme,
+                picture: data.url,
+                collegeData: {
+                  name: collegeName,
+                  description: description,
+                  startingDate: "20-06-2020",
+                  endingDate: "Present",
+                },
+                findid: localStorage.getItem("userid"),
+                resume: "www.djdjdj.com",
+              }
+            )
             .then((result) => {
               console.log(result);
 
@@ -493,7 +499,7 @@ function Dashboard() {
     e.preventDefault();
     if (state === true) {
       axios
-        .post("http://localhost:5000/api/homepage/add/data", {
+        .post("https://portifybackend.herokuapp.com/api/homepage/add/data", {
           Name: name,
           currentTitle: currentTitle,
           aboutme: aboutme,
@@ -521,7 +527,7 @@ function Dashboard() {
       setState(false);
     } else {
       axios
-        .post("http://localhost:5000/api/homepage/update/data", {
+        .post("https://portifybackend.herokuapp.com/api/homepage/update/data", {
           Name: name,
           currentTitle: currentTitle,
           aboutme: aboutme,
@@ -736,9 +742,12 @@ function Dashboard() {
                         onClick={(e) => {
                           e.preventDefault();
                           axios
-                            .post("http://localhost:5000/api/projects/delete", {
-                              id: project._id,
-                            })
+                            .post(
+                              "https://portifybackend.herokuapp.com/api/projects/delete",
+                              {
+                                id: project._id,
+                              }
+                            )
                             .then((result) => {
                               console.log(result);
                               if (loader === false) {
@@ -1289,9 +1298,12 @@ function Dashboard() {
                         onClick={(e) => {
                           e.preventDefault();
                           axios
-                            .post("http://localhost:5000/api/links/delete", {
-                              id: link._id,
-                            })
+                            .post(
+                              "https://portifybackend.herokuapp.com/api/links/delete",
+                              {
+                                id: link._id,
+                              }
+                            )
                             .then((result) => {
                               if (stateChange === false) {
                                 setStateChange(true);

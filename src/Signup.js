@@ -17,7 +17,7 @@ function Signup() {
       toast("Please Fill all the fields");
     } else {
       await axios
-        .post("http://localhost:5000/api/user/signup", {
+        .post("https://portifybackend.herokuapp.com/api/user/signup", {
           email: email,
           password: password,
         })
