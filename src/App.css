@@ -203,3 +203,76 @@ label {
   display: flex;
   justify-content: end;
 }
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #e1ec00;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.Container-Loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 800px;
+}
+
+.Deploy-status {
+  font-family: "cursive";
+  display: flex;
+  justify-content: center;
+}
+span::before {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  content: "Data";
+  animation: animate 10s;
+  padding-left: 10px;
+}
+span::after {
+  content: "";
+}
+
+@keyframes animate {
+  0% {
+    color: #00d7ff;
+    content: "User Information";
+  }
+  20% {
+    color: #76ba99;
+    content: "College Data";
+  }
+  30% {
+    color: #e1ec00;
+    content: "Projects";
+  }
+  50% {
+    content: "Experiences";
+  }
+
+  75% {
+    content: "Links";
+  }
+}

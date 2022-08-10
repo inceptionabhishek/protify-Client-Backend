@@ -19,6 +19,25 @@ import { FiEdit2 } from "react-icons/fi";
 import { BsUpload } from "react-icons/bs";
 import { FcDocument } from "react-icons/fc";
 function Dashboard() {
+  const [deployShowLink, setdeployshowLink] = useState(false);
+  const [deployshow, setdeployshow] = useState(false);
+  const deployhandleClose = () => setdeployshow(false);
+  const deployhandleshow = () => setdeployshow(true);
+  const [boolgetinfo, setboolgetinfo] = useState(false);
+  const [boolgetprojects, setboolgetprojects] = useState(false);
+  const [boolgetexperience, setboolgetexperience] = useState(false);
+  const [boolgetlinks, setboolgetlinks] = useState(false);
+  const [finalbool, setfinalbool] = useState(true);
+  const DeployStatus = () => {
+    setTimeout(() => {
+      setdeployshowLink(true);
+    }, 10000);
+  };
+  useEffect(() => {
+    if (boolgetinfo && boolgetprojects && boolgetexperience && boolgetlinks) {
+      setfinalbool(false);
+    }
+  }, [boolgetinfo, boolgetprojects, boolgetexperience, boolgetlinks]);
   const [stateChange, setStateChange] = useState(false);
   /*
   LINKS : section START : ------------------------------------------------------
@@ -57,6 +76,7 @@ function Dashboard() {
       })
       .then((result) => {
         setLinksArr(result.data.Data);
+        setboolgetlinks(true);
       })
       .catch((err) => {
         console.log(err);
@@ -90,7 +110,6 @@ function Dashboard() {
     useState("");
   const [experienceedittechstacks, setExperienceEditTechstacks] = useState("");
   const [Certificatelinkedit, setcertificatelinkdedit] = useState("");
-
   const handleexperienceeditClosewithSave = () => {
     axios
       .post("https://portifybackend.herokuapp.com/api/experience/update", {
@@ -146,6 +165,7 @@ function Dashboard() {
       })
       .then((result) => {
         setExperiencearr(result.data.Data);
+        setboolgetexperience(true);
       })
       .catch((err) => {
         console.log(err);
@@ -215,6 +235,7 @@ function Dashboard() {
         setAboutme(result.aboutme);
         setCollegeName(result.collegeData.name);
         setDescription(result.collegeData.description);
+        setboolgetinfo(true);
         if (result.picture !== null) {
           setPicture(result.picture);
         } else {
@@ -402,6 +423,7 @@ function Dashboard() {
       .then((result) => {
         console.log(result);
         setProjectArray(result.data.Data);
+        setboolgetprojects(true);
       })
       .catch((err) => {
         console.log(err);
@@ -565,840 +587,906 @@ function Dashboard() {
               Homepage
             </button>
           </Link>
-          <div className="Auth-form-content">
-            <h3
-              className="Top-Heading"
-              style={{ fontSize: "20px", marginTop: "20px" }}
-            >
-              About YourSelf
-            </h3>
+          {!finalbool ? (
+            <>
+              <div className="Auth-form-content">
+                <h3
+                  className="Top-Heading"
+                  style={{ fontSize: "20px", marginTop: "20px" }}
+                >
+                  About YourSelf
+                </h3>
 
-            <div className="Picture">
-              <img className="Picture-User" src={picture}></img>
-              <FiEdit2 onClick={handleShow} style={{ cursor: "pointer" }} />
-            </div>
+                <div className="Picture">
+                  <img className="Picture-User" src={picture}></img>
+                  <FiEdit2 onClick={handleShow} style={{ cursor: "pointer" }} />
+                </div>
 
-            <Modal show={picshow} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title className="Top-Heading">Upload Image</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <div className="Upload-Image-Section">
-                  <input
-                    type="file"
-                    name="fileToUpload"
-                    id="fileToUpload"
-                    onChange={(e) => {
-                      setImageUpload(e.target.files[0]);
-                    }}
-                  ></input>
-                </div>
-                <br />
-                <div className="Upload-Image-Section">
-                  <BsUpload size={20} onClick={HandlerFunction} />
-                  <p className="Temp-Para">Upload Image</p>
-                </div>
-                {upload ? (
-                  <>
-                    <div className="Temp">
-                      <ProgressBar
-                        width="230"
-                        trackWidth="13"
-                        percentage="90"
-                      />
+                <Modal show={picshow} onHide={handleClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title className="Top-Heading">
+                      Upload Image
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div className="Upload-Image-Section">
+                      <input
+                        type="file"
+                        name="fileToUpload"
+                        id="fileToUpload"
+                        onChange={(e) => {
+                          setImageUpload(e.target.files[0]);
+                        }}
+                      ></input>
                     </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-              </Modal.Body>
-              <Modal.Footer>
+                    <br />
+                    <div className="Upload-Image-Section">
+                      <BsUpload size={20} onClick={HandlerFunction} />
+                      <p className="Temp-Para">Upload Image</p>
+                    </div>
+                    {upload ? (
+                      <>
+                        <div className="Temp">
+                          <ProgressBar
+                            width="230"
+                            trackWidth="13"
+                            percentage="90"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button
+                      className="HomePage-Go"
+                      style={{ width: "120px", marginTop: "20px" }}
+                      onClick={handleClose}
+                    >
+                      Close
+                    </button>
+                  </Modal.Footer>
+                </Modal>
+                <div className="form-group mt-3">
+                  <label>Name💤</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="Enter Name"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>Current Title🙎</label>
+                  <input
+                    type="text"
+                    className="form-control mt-1"
+                    placeholder="Intern.., software devloper.."
+                    value={currentTitle}
+                    onChange={(e) => {
+                      setCurrentTitle(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="form-group mt-3">
+                  <label>About Me😎</label>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="Write about Your self"
+                    value={aboutme}
+                    onChange={(e) => {
+                      setAboutme(e.target.value);
+                    }}
+                  />
+                </div>
                 <button
                   className="HomePage-Go"
                   style={{ width: "120px", marginTop: "20px" }}
-                  onClick={handleClose}
+                  onClick={updateUserInfoHandle}
                 >
-                  Close
+                  Update
                 </button>
-              </Modal.Footer>
-            </Modal>
-            <div className="form-group mt-3">
-              <label>Name💤</label>
-              <input
-                type="text"
-                className="form-control mt-1"
-                placeholder="Enter Name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              />
-            </div>
-            <div className="form-group mt-3">
-              <label>Current Title🙎</label>
-              <input
-                type="text"
-                className="form-control mt-1"
-                placeholder="Intern.., software devloper.."
-                value={currentTitle}
-                onChange={(e) => {
-                  setCurrentTitle(e.target.value);
-                }}
-              />
-            </div>
-            <div className="form-group mt-3">
-              <label>About Me😎</label>
-              <Form.Control
-                as="textarea"
-                placeholder="Write about Your self"
-                value={aboutme}
-                onChange={(e) => {
-                  setAboutme(e.target.value);
-                }}
-              />
-            </div>
-            <button
-              className="HomePage-Go"
-              style={{ width: "120px", marginTop: "20px" }}
-              onClick={updateUserInfoHandle}
-            >
-              Update
-            </button>
-            <h3
-              className="Top-Heading"
-              style={{ fontSize: "20px", marginTop: "20px" }}
-            >
-              College Data
-            </h3>
-            <div className="form-group mt-3">
-              <label>College Name 😪</label>
-              <input
-                type="text"
-                className="form-control mt-1"
-                placeholder="MIT,IIT,.."
-                value={collegeName}
-                onChange={(e) => {
-                  setCollegeName(e.target.value);
-                }}
-              />
-            </div>
-            <div className="form-group mt-3">
-              <label>Add Description 🙉</label>
-              <Form.Control
-                as="textarea"
-                placeholder="Write about your college Life, achievement"
-                rows={3}
-                value={description}
-                onChange={(e) => {
-                  setDescription(e.target.value);
-                }}
-              />
-            </div>
-            <button
-              className="HomePage-Go"
-              style={{ width: "120px", marginTop: "20px" }}
-              onClick={updateUserInfoHandle}
-            >
-              Update
-            </button>
-            <h3
-              className="Top-Heading"
-              style={{ fontSize: "20px", marginTop: "20px" }}
-            >
-              Projects
-            </h3>
-            {projectArray !== null && projectArray.length > 0 ? (
-              <>
-                <p className="hint">Added Projects</p>
-              </>
-            ) : (
-              <></>
-            )}
-            {projectArray !== null &&
-              projectArray.length > 0 &&
-              projectArray.map((project, index) => {
-                return (
-                  <>
-                    <Card style={{ width: "18rem" }}>
-                      <Card.Img variant="top" src={project.pic} />
-                      <Card.Body>
-                        <Card.Title>Name : {project.Name}</Card.Title>
-                        <Card.Text>
-                          Description : {project.description}
-                        </Card.Text>
-                        <Card.Text>Link : {project.link}</Card.Text>
-                        <Card.Text>TechStacks : {project.techstacks}</Card.Text>
-                        <button
-                          className="HomePage-Go"
-                          style={{ width: "90px" }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            console.log(project._id);
-                            localStorage.setItem("editprojectid", project._id);
-                            setLoader(true);
-                            setEditShow(true);
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="HomePage-Go"
-                          style={{ width: "90px", backgroundColor: "red" }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            axios
-                              .post(
-                                "https://portifybackend.herokuapp.com/api/projects/delete",
-                                {
-                                  id: project._id,
-                                }
-                              )
-                              .then((result) => {
-                                console.log(result);
-                                if (loader === false) {
-                                  setLoader(true);
-                                } else {
-                                  setLoader(false);
-                                }
-                                if (bool === false) {
-                                  setbool(true);
-                                } else {
-                                  setbool(false);
-                                }
-                              })
-                              .catch((err) => {
-                                console.log(err);
-                              });
-                          }}
-                        >
-                          Delete
-                        </button>
-                      </Card.Body>
-                    </Card>
-                    <br />
-                  </>
-                );
-              })}
-            <button
-              className="HomePage-Go"
-              style={{ width: "120px", marginTop: "20px" }}
-              onClick={projecthandleShow}
-            >
-              Add Project
-            </button>
-            <Modal show={projectshow} onHide={projecthandleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title className="Top-Heading">Add Project</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
+                <h3
+                  className="Top-Heading"
+                  style={{ fontSize: "20px", marginTop: "20px" }}
+                >
+                  College Data
+                </h3>
                 <div className="form-group mt-3">
-                  <label>Name Of Project 🔫</label>
+                  <label>College Name 😪</label>
                   <input
                     type="text"
                     className="form-control mt-1"
-                    placeholder="Name like portify,.."
+                    placeholder="MIT,IIT,.."
+                    value={collegeName}
                     onChange={(e) => {
-                      setProjectAddName(e.target.value);
+                      setCollegeName(e.target.value);
                     }}
                   />
                 </div>
                 <div className="form-group mt-3">
-                  <label>Add Link 🎁</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="github,..bitbucket.."
-                    onChange={(e) => {
-                      setProjectAddLink(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Add Description 🔥</label>
+                  <label>Add Description 🙉</label>
                   <Form.Control
                     as="textarea"
-                    placeholder="Describe Project"
+                    placeholder="Write about your college Life, achievement"
                     rows={3}
+                    value={description}
                     onChange={(e) => {
-                      setProjectAddDesc(e.target.value);
+                      setDescription(e.target.value);
                     }}
                   />
                 </div>
-                <div className="form-group mt-3">
-                  <label>TechStacks Used 🚗</label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Like ReactJS, MERN, NODE,..."
-                    rows={3}
-                    onChange={(e) => {
-                      setProjectAddTechStacks(e.target.value);
-                    }}
-                  />
-                </div>
-                <br />
-                <label>Project Image 😍</label>
-                <br />
-                <br />
-                <div className="Upload-Image-Section">
-                  <input
-                    type="file"
-                    name="fileToUpload"
-                    id="fileToUpload"
-                    onChange={(e) => {
-                      setProjectTempImage(e.target.files[0]);
-                    }}
-                  ></input>
-                </div>
-                <br />
-                <div className="Upload-Image-Section">
-                  <BsUpload size={20} onClick={ProjectImageHandler} />
-                  <p className="Temp-Para">Upload Image</p>
-                </div>
-                {upload ? (
+                <button
+                  className="HomePage-Go"
+                  style={{ width: "120px", marginTop: "20px" }}
+                  onClick={updateUserInfoHandle}
+                >
+                  Update
+                </button>
+                <h3
+                  className="Top-Heading"
+                  style={{ fontSize: "20px", marginTop: "20px" }}
+                >
+                  Projects
+                </h3>
+                {projectArray !== null && projectArray.length > 0 ? (
                   <>
-                    <div className="Temp">
-                      <ProgressBar
-                        width="230"
-                        trackWidth="13"
-                        percentage="90"
-                      />
-                    </div>
+                    <p className="hint">Added Projects</p>
                   </>
                 ) : (
                   <></>
                 )}
-              </Modal.Body>
-              <Modal.Footer>
+                {projectArray !== null &&
+                  projectArray.length > 0 &&
+                  projectArray.map((project, index) => {
+                    return (
+                      <>
+                        <Card style={{ width: "18rem" }}>
+                          <Card.Img variant="top" src={project.pic} />
+                          <Card.Body>
+                            <Card.Title>Name : {project.Name}</Card.Title>
+                            <Card.Text>
+                              Description : {project.description}
+                            </Card.Text>
+                            <Card.Text>Link : {project.link}</Card.Text>
+                            <Card.Text>
+                              TechStacks : {project.techstacks}
+                            </Card.Text>
+                            <button
+                              className="HomePage-Go"
+                              style={{ width: "90px" }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                console.log(project._id);
+                                localStorage.setItem(
+                                  "editprojectid",
+                                  project._id
+                                );
+                                setLoader(true);
+                                setEditShow(true);
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="HomePage-Go"
+                              style={{ width: "90px", backgroundColor: "red" }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                axios
+                                  .post(
+                                    "https://portifybackend.herokuapp.com/api/projects/delete",
+                                    {
+                                      id: project._id,
+                                    }
+                                  )
+                                  .then((result) => {
+                                    console.log(result);
+                                    if (loader === false) {
+                                      setLoader(true);
+                                    } else {
+                                      setLoader(false);
+                                    }
+                                    if (bool === false) {
+                                      setbool(true);
+                                    } else {
+                                      setbool(false);
+                                    }
+                                  })
+                                  .catch((err) => {
+                                    console.log(err);
+                                  });
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </Card.Body>
+                        </Card>
+                        <br />
+                      </>
+                    );
+                  })}
                 <button
-                  onClick={projecthandleClose}
                   className="HomePage-Go"
-                  style={{ width: "70px" }}
+                  style={{ width: "120px", marginTop: "20px" }}
+                  onClick={projecthandleShow}
                 >
-                  Close
+                  Add Project
                 </button>
-                <button
-                  onClick={projecthandleCloseWithSave}
-                  className="HomePage-Go"
-                  style={{ width: "70px" }}
-                >
-                  Save Changes
-                </button>
-              </Modal.Footer>
-            </Modal>
-
-            <Modal show={editshow} onHide={editHandleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title className="Top-Heading">Edit Project</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                {loader ? (
-                  <>
-                    <div className="Loader">
-                      <Spinner animation="border" variant="warning" />
-                      <p className="Loader-Hint">Fetching Details....</p>
-                    </div>
-                  </>
-                ) : (
-                  <>
+                <Modal show={projectshow} onHide={projecthandleClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title className="Top-Heading">
+                      Add Project
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
                     <div className="form-group mt-3">
-                      <label>Update Name Of Project 🔫</label>
+                      <label>Name Of Project 🔫</label>
                       <input
                         type="text"
                         className="form-control mt-1"
                         placeholder="Name like portify,.."
-                        value={projectEditName}
                         onChange={(e) => {
-                          setProjectEditName(e.target.value);
+                          setProjectAddName(e.target.value);
                         }}
                       />
                     </div>
                     <div className="form-group mt-3">
-                      <label>Update Link 🎁</label>
+                      <label>Add Link 🎁</label>
                       <input
                         type="text"
                         className="form-control mt-1"
                         placeholder="github,..bitbucket.."
-                        value={projectEditLink}
                         onChange={(e) => {
-                          setProjectEditLink(e.target.value);
+                          setProjectAddLink(e.target.value);
                         }}
                       />
                     </div>
                     <div className="form-group mt-3">
-                      <label>Update Description 🔥</label>
+                      <label>Add Description 🔥</label>
                       <Form.Control
                         as="textarea"
                         placeholder="Describe Project"
                         rows={3}
-                        value={projectEditDesc}
                         onChange={(e) => {
-                          setProjectEditDesc(e.target.value);
+                          setProjectAddDesc(e.target.value);
                         }}
                       />
                     </div>
                     <div className="form-group mt-3">
-                      <label>Update TechStacks Used 🚗</label>
+                      <label>TechStacks Used 🚗</label>
                       <Form.Control
                         as="textarea"
                         placeholder="Like ReactJS, MERN, NODE,..."
                         rows={3}
-                        value={projectEditTechStacks}
                         onChange={(e) => {
-                          setProjectEditTechStacks(e.target.value);
+                          setProjectAddTechStacks(e.target.value);
                         }}
                       />
                     </div>
-                  </>
-                )}
+                    <br />
+                    <label>Project Image 😍</label>
+                    <br />
+                    <br />
+                    <div className="Upload-Image-Section">
+                      <input
+                        type="file"
+                        name="fileToUpload"
+                        id="fileToUpload"
+                        onChange={(e) => {
+                          setProjectTempImage(e.target.files[0]);
+                        }}
+                      ></input>
+                    </div>
+                    <br />
+                    <div className="Upload-Image-Section">
+                      <BsUpload size={20} onClick={ProjectImageHandler} />
+                      <p className="Temp-Para">Upload Image</p>
+                    </div>
+                    {upload ? (
+                      <>
+                        <div className="Temp">
+                          <ProgressBar
+                            width="230"
+                            trackWidth="13"
+                            percentage="90"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button
+                      onClick={projecthandleClose}
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                    >
+                      Close
+                    </button>
+                    <button
+                      onClick={projecthandleCloseWithSave}
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                    >
+                      Save Changes
+                    </button>
+                  </Modal.Footer>
+                </Modal>
+
+                <Modal show={editshow} onHide={editHandleClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title className="Top-Heading">
+                      Edit Project
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    {loader ? (
+                      <>
+                        <div className="Loader">
+                          <Spinner animation="border" variant="warning" />
+                          <p className="Loader-Hint">Fetching Details....</p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="form-group mt-3">
+                          <label>Update Name Of Project 🔫</label>
+                          <input
+                            type="text"
+                            className="form-control mt-1"
+                            placeholder="Name like portify,.."
+                            value={projectEditName}
+                            onChange={(e) => {
+                              setProjectEditName(e.target.value);
+                            }}
+                          />
+                        </div>
+                        <div className="form-group mt-3">
+                          <label>Update Link 🎁</label>
+                          <input
+                            type="text"
+                            className="form-control mt-1"
+                            placeholder="github,..bitbucket.."
+                            value={projectEditLink}
+                            onChange={(e) => {
+                              setProjectEditLink(e.target.value);
+                            }}
+                          />
+                        </div>
+                        <div className="form-group mt-3">
+                          <label>Update Description 🔥</label>
+                          <Form.Control
+                            as="textarea"
+                            placeholder="Describe Project"
+                            rows={3}
+                            value={projectEditDesc}
+                            onChange={(e) => {
+                              setProjectEditDesc(e.target.value);
+                            }}
+                          />
+                        </div>
+                        <div className="form-group mt-3">
+                          <label>Update TechStacks Used 🚗</label>
+                          <Form.Control
+                            as="textarea"
+                            placeholder="Like ReactJS, MERN, NODE,..."
+                            rows={3}
+                            value={projectEditTechStacks}
+                            onChange={(e) => {
+                              setProjectEditTechStacks(e.target.value);
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
+                    <br />
+                    <label>Update Project Image 😍</label>
+                    <br />
+                    <br />
+                    <div className="Upload-Image-Section">
+                      <input
+                        type="file"
+                        name="fileToUpload"
+                        id="fileToUpload"
+                        onChange={(e) => {
+                          setProjectTempImage(e.target.files[0]);
+                        }}
+                      ></input>
+                    </div>
+                    <br />
+                    <div className="Upload-Image-Section">
+                      <BsUpload size={20} onClick={ProjectImageHandlerUpdate} />
+                      <p className="Temp-Para">Upload Image</p>
+                    </div>
+                    {upload ? (
+                      <>
+                        <div className="Temp">
+                          <ProgressBar
+                            width="230"
+                            trackWidth="13"
+                            percentage="90"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button
+                      onClick={editHandleClose}
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                    >
+                      Close
+                    </button>
+                    <button
+                      onClick={editHandleCloseWithSave}
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                    >
+                      Save Changes
+                    </button>
+                  </Modal.Footer>
+                </Modal>
+
+                <h3
+                  className="Top-Heading"
+                  style={{ fontSize: "20px", marginTop: "20px" }}
+                >
+                  Experience
+                </h3>
                 <br />
-                <label>Update Project Image 😍</label>
-                <br />
-                <br />
-                <div className="Upload-Image-Section">
-                  <input
-                    type="file"
-                    name="fileToUpload"
-                    id="fileToUpload"
-                    onChange={(e) => {
-                      setProjectTempImage(e.target.files[0]);
-                    }}
-                  ></input>
-                </div>
-                <br />
-                <div className="Upload-Image-Section">
-                  <BsUpload size={20} onClick={ProjectImageHandlerUpdate} />
-                  <p className="Temp-Para">Upload Image</p>
-                </div>
-                {upload ? (
-                  <>
-                    <div className="Temp">
-                      <ProgressBar
-                        width="230"
-                        trackWidth="13"
-                        percentage="90"
+                {experiencearr !== null &&
+                  experiencearr.length > 0 &&
+                  experiencearr.map((experience, index) => {
+                    return (
+                      <div className="Temp">
+                        <Card
+                          style={{
+                            width: "15rem",
+                            borderRadius: "30px",
+                            border: "2px solid black",
+                            margin: "20px",
+                          }}
+                        >
+                          <Card.Img variant="top" src="" />
+                          <div className="TypeOfExperience">
+                            <label>{experience.type}</label>
+                          </div>
+                          <Card.Body>
+                            <Card.Title>
+                              Company : {experience.company}
+                            </Card.Title>
+                            <Card.Text>
+                              Duration : {experience.duration}
+                            </Card.Text>
+                            <Card.Text>
+                              Description : {experience.description}
+                            </Card.Text>
+
+                            <Card.Text>
+                              TechStacks : {experience.techstacksused}
+                            </Card.Text>
+                            <Card.Text>
+                              Document : <FcDocument />
+                              {experience.douments}
+                            </Card.Text>
+                            <button
+                              className="HomePage-Go"
+                              style={{ width: "90px", margin: "10px" }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                localStorage.setItem(
+                                  "experienceeditid",
+                                  experience._id
+                                );
+                                setLoader(true);
+                                setexperienceeditShow(true);
+                              }}
+                            >
+                              Edit
+                            </button>
+
+                            <button
+                              className="HomePage-Go"
+                              style={{ width: "90px", backgroundColor: "red" }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                axios
+                                  .post(
+                                    "https://portifybackend.herokuapp.com/api/experience/delete",
+                                    {
+                                      id: experience._id,
+                                    }
+                                  )
+                                  .then((result) => {
+                                    if (stateChange === false) {
+                                      setState(true);
+                                    } else {
+                                      setState(false);
+                                    }
+                                  })
+                                  .catch((err) => {
+                                    console.log(err);
+                                  });
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </Card.Body>
+                        </Card>
+                        <br />
+                        <br />
+                      </div>
+                    );
+                  })}
+                <Modal show={experienceshow} onHide={handleexperienceClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title className="Top-Heading">
+                      Add Experience
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div className="form-group mt-3">
+                      <label>Type 👑</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="Intern,SDE,.."
+                        onChange={(e) => {
+                          setExperienceType(e.target.value);
+                        }}
                       />
                     </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-              </Modal.Body>
-              <Modal.Footer>
-                <button
-                  onClick={editHandleClose}
-                  className="HomePage-Go"
-                  style={{ width: "70px" }}
-                >
-                  Close
-                </button>
-                <button
-                  onClick={editHandleCloseWithSave}
-                  className="HomePage-Go"
-                  style={{ width: "70px" }}
-                >
-                  Save Changes
-                </button>
-              </Modal.Footer>
-            </Modal>
-
-            <h3
-              className="Top-Heading"
-              style={{ fontSize: "20px", marginTop: "20px" }}
-            >
-              Experience
-            </h3>
-            <br />
-            {experiencearr !== null &&
-              experiencearr.length > 0 &&
-              experiencearr.map((experience, index) => {
-                return (
-                  <div className="Temp">
-                    <Card
-                      style={{
-                        width: "15rem",
-                        borderRadius: "30px",
-                        border: "2px solid black",
-                        margin: "20px",
-                      }}
-                    >
-                      <Card.Img variant="top" src="" />
-                      <div className="TypeOfExperience">
-                        <label>{experience.type}</label>
-                      </div>
-                      <Card.Body>
-                        <Card.Title>Company : {experience.company}</Card.Title>
-                        <Card.Text>Duration : {experience.duration}</Card.Text>
-                        <Card.Text>
-                          Description : {experience.description}
-                        </Card.Text>
-
-                        <Card.Text>
-                          TechStacks : {experience.techstacksused}
-                        </Card.Text>
-                        <Card.Text>
-                          Document : <FcDocument />
-                          {experience.douments}
-                        </Card.Text>
-                        <button
-                          className="HomePage-Go"
-                          style={{ width: "90px", margin: "10px" }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            localStorage.setItem(
-                              "experienceeditid",
-                              experience._id
-                            );
-                            setLoader(true);
-                            setexperienceeditShow(true);
-                          }}
-                        >
-                          Edit
-                        </button>
-
-                        <button
-                          className="HomePage-Go"
-                          style={{ width: "90px", backgroundColor: "red" }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            axios
-                              .post(
-                                "https://portifybackend.herokuapp.com/api/experience/delete",
-                                {
-                                  id: experience._id,
-                                }
-                              )
-                              .then((result) => {
-                                if (stateChange === false) {
-                                  setState(true);
-                                } else {
-                                  setState(false);
-                                }
-                              })
-                              .catch((err) => {
-                                console.log(err);
-                              });
-                          }}
-                        >
-                          Delete
-                        </button>
-                      </Card.Body>
-                    </Card>
-                    <br />
-                    <br />
-                  </div>
-                );
-              })}
-            <Modal show={experienceshow} onHide={handleexperienceClose}>
-              <Modal.Header closeButton>
-                <Modal.Title className="Top-Heading">
-                  Add Experience
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <div className="form-group mt-3">
-                  <label>Type 👑</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="Intern,SDE,.."
-                    onChange={(e) => {
-                      setExperienceType(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Company Name 🔫</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="Amazon,Google,..."
-                    onChange={(e) => {
-                      setCompanyName(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Duration of Experience 🎁</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="3 months,6 months, ..."
-                    onChange={(e) => {
-                      setDuration(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Add Description 🔥</label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Describe Your Experiences,.."
-                    rows={3}
-                    onChange={(e) => {
-                      setexperienceDescription(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>TechStacks Used 🚗</label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Like ReactJS, MERN, NODE,..."
-                    rows={3}
-                    onChange={(e) => {
-                      setExperienceTechStacks(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Certificate/Offer Letter Link</label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="GDrive Link...🔥"
-                    rows={3}
-                    onChange={(e) => {
-                      setCertificateLink(e.target.value);
-                    }}
-                  />
-                </div>
-                <br />
-              </Modal.Body>
-              <Modal.Footer>
-                <button
-                  className="HomePage-Go"
-                  style={{ width: "70px" }}
-                  onClick={handleexperienceClose}
-                >
-                  Close
-                </button>
-                <button
-                  className="HomePage-Go"
-                  style={{ width: "70px" }}
-                  onClick={handleexperienceClosewithSave}
-                >
-                  Save Changes
-                </button>
-              </Modal.Footer>
-            </Modal>
-            <Modal show={experienceeditshow} onHide={handleexperienceeditClose}>
-              <Modal.Header closeButton>
-                <Modal.Title className="Top-Heading">
-                  Edit Experience
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <div className="form-group mt-3">
-                  <label>Edit Type 👑</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="Intern,SDE,.."
-                    onChange={(e) => {
-                      setExperienceeditType(e.target.value);
-                    }}
-                    value={experienceeditType}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Edit Company Name 🔫</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="Amazon,Google,..."
-                    onChange={(e) => {
-                      setcompanyedit(e.target.value);
-                    }}
-                    value={companyedit}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Edit Duration of Experience 🎁</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="3 months,6 months, ..."
-                    onChange={(e) => {
-                      setdurationedit(e.target.value);
-                    }}
-                    value={durationedit}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Edit Description 🔥</label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Describe Your Experiences,.."
-                    rows={3}
-                    onChange={(e) => {
-                      setexperienceDescriptionedit(e.target.value);
-                    }}
-                    value={experiencedescriptionedit}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Edit TechStacks Used 🚗</label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="Like ReactJS, MERN, NODE,..."
-                    rows={3}
-                    onChange={(e) => {
-                      setExperienceEditTechstacks(e.target.value);
-                    }}
-                    value={experienceedittechstacks}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Edit Certificate/Offer Letter Link</label>
-                  <Form.Control
-                    as="textarea"
-                    placeholder="GDrive Link...🔥"
-                    rows={3}
-                    onChange={(e) => {
-                      setcertificatelinkdedit(e.target.value);
-                    }}
-                    value={Certificatelinkedit}
-                  />
-                </div>
-                <br />
-              </Modal.Body>
-              <Modal.Footer>
-                <button
-                  className="HomePage-Go"
-                  style={{ width: "70px" }}
-                  onClick={handleexperienceeditClose}
-                >
-                  Close
-                </button>
-                <button
-                  className="HomePage-Go"
-                  style={{ width: "70px" }}
-                  onClick={handleexperienceeditClosewithSave}
-                >
-                  Save Changes
-                </button>
-              </Modal.Footer>
-            </Modal>
-            <button
-              className="HomePage-Go"
-              style={{ width: "120px", marginTop: "10px" }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleexperienceShow();
-              }}
-            >
-              Add Experience
-            </button>
-            <h3
-              className="Top-Heading"
-              style={{ fontSize: "20px", marginTop: "20px" }}
-            >
-              Links
-            </h3>
-            {Linksarr != null &&
-              Linksarr.length > 0 &&
-              Linksarr.map((link, index) => {
-                return (
-                  <>
-                    <div className="LinksClass">
-                      <div className="links-contain">
-                        <AiFillDelete
-                          size={30}
-                          style={{ color: "#D1512D", cursor: "pointer" }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            axios
-                              .post(
-                                "https://portifybackend.herokuapp.com/api/links/delete",
-                                {
-                                  id: link._id,
-                                }
-                              )
-                              .then((result) => {
-                                if (stateChange === false) {
-                                  setStateChange(true);
-                                } else {
-                                  setStateChange(false);
-                                }
-                              })
-                              .catch((err) => {
-                                console.log(err);
-                              });
-                          }}
-                        />
-                      </div>
-                      Name : {link.Name}
-                      <br />
-                      Link : {link.link}
-                      <br />
+                    <div className="form-group mt-3">
+                      <label>Company Name 🔫</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="Amazon,Google,..."
+                        onChange={(e) => {
+                          setCompanyName(e.target.value);
+                        }}
+                      />
                     </div>
-                  </>
-                );
-              })}
-            <Modal show={linkshow} onHide={handlelinkClose}>
-              <Modal.Header closeButton>
-                <Modal.Title className="Top-Heading">Add Links</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <div className="form-group mt-3">
-                  <label> Link Name 👑</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="Codechef,Codeforces.."
-                    onChange={(e) => {
-                      setLinksName(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label>Link 🔫</label>
-                  <input
-                    type="text"
-                    className="form-control mt-1"
-                    placeholder="www.codechef.com/tourist.."
-                    onChange={(e) => {
-                      setlink(e.target.value);
-                    }}
-                  />
-                </div>
-              </Modal.Body>
-              <Modal.Footer>
+                    <div className="form-group mt-3">
+                      <label>Duration of Experience 🎁</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="3 months,6 months, ..."
+                        onChange={(e) => {
+                          setDuration(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Add Description 🔥</label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Describe Your Experiences,.."
+                        rows={3}
+                        onChange={(e) => {
+                          setexperienceDescription(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>TechStacks Used 🚗</label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Like ReactJS, MERN, NODE,..."
+                        rows={3}
+                        onChange={(e) => {
+                          setExperienceTechStacks(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Certificate/Offer Letter Link</label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="GDrive Link...🔥"
+                        rows={3}
+                        onChange={(e) => {
+                          setCertificateLink(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <br />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                      onClick={handleexperienceClose}
+                    >
+                      Close
+                    </button>
+                    <button
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                      onClick={handleexperienceClosewithSave}
+                    >
+                      Save Changes
+                    </button>
+                  </Modal.Footer>
+                </Modal>
+                <Modal
+                  show={experienceeditshow}
+                  onHide={handleexperienceeditClose}
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title className="Top-Heading">
+                      Edit Experience
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div className="form-group mt-3">
+                      <label>Edit Type 👑</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="Intern,SDE,.."
+                        onChange={(e) => {
+                          setExperienceeditType(e.target.value);
+                        }}
+                        value={experienceeditType}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Edit Company Name 🔫</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="Amazon,Google,..."
+                        onChange={(e) => {
+                          setcompanyedit(e.target.value);
+                        }}
+                        value={companyedit}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Edit Duration of Experience 🎁</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="3 months,6 months, ..."
+                        onChange={(e) => {
+                          setdurationedit(e.target.value);
+                        }}
+                        value={durationedit}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Edit Description 🔥</label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Describe Your Experiences,.."
+                        rows={3}
+                        onChange={(e) => {
+                          setexperienceDescriptionedit(e.target.value);
+                        }}
+                        value={experiencedescriptionedit}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Edit TechStacks Used 🚗</label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Like ReactJS, MERN, NODE,..."
+                        rows={3}
+                        onChange={(e) => {
+                          setExperienceEditTechstacks(e.target.value);
+                        }}
+                        value={experienceedittechstacks}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Edit Certificate/Offer Letter Link</label>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="GDrive Link...🔥"
+                        rows={3}
+                        onChange={(e) => {
+                          setcertificatelinkdedit(e.target.value);
+                        }}
+                        value={Certificatelinkedit}
+                      />
+                    </div>
+                    <br />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                      onClick={handleexperienceeditClose}
+                    >
+                      Close
+                    </button>
+                    <button
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                      onClick={handleexperienceeditClosewithSave}
+                    >
+                      Save Changes
+                    </button>
+                  </Modal.Footer>
+                </Modal>
                 <button
                   className="HomePage-Go"
-                  style={{ width: "70px" }}
-                  onClick={handlelinkClose}
+                  style={{ width: "120px", marginTop: "10px" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleexperienceShow();
+                  }}
                 >
-                  Close
+                  Add Experience
                 </button>
+                <h3
+                  className="Top-Heading"
+                  style={{ fontSize: "20px", marginTop: "20px" }}
+                >
+                  Links
+                </h3>
+                {Linksarr != null &&
+                  Linksarr.length > 0 &&
+                  Linksarr.map((link, index) => {
+                    return (
+                      <>
+                        <div className="LinksClass">
+                          <div className="links-contain">
+                            <AiFillDelete
+                              size={30}
+                              style={{ color: "#D1512D", cursor: "pointer" }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                axios
+                                  .post(
+                                    "https://portifybackend.herokuapp.com/api/links/delete",
+                                    {
+                                      id: link._id,
+                                    }
+                                  )
+                                  .then((result) => {
+                                    if (stateChange === false) {
+                                      setStateChange(true);
+                                    } else {
+                                      setStateChange(false);
+                                    }
+                                  })
+                                  .catch((err) => {
+                                    console.log(err);
+                                  });
+                              }}
+                            />
+                          </div>
+                          Name : {link.Name}
+                          <br />
+                          Link : {link.link}
+                          <br />
+                        </div>
+                      </>
+                    );
+                  })}
+                <Modal show={linkshow} onHide={handlelinkClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title className="Top-Heading">Add Links</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div className="form-group mt-3">
+                      <label> Link Name 👑</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="Codechef,Codeforces.."
+                        onChange={(e) => {
+                          setLinksName(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Link 🔫</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="www.codechef.com/tourist.."
+                        onChange={(e) => {
+                          setlink(e.target.value);
+                        }}
+                      />
+                    </div>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                      onClick={handlelinkClose}
+                    >
+                      Close
+                    </button>
+                    <button
+                      className="HomePage-Go"
+                      style={{ width: "70px" }}
+                      onClick={handlelinkClosewithsave}
+                    >
+                      Save Changes
+                    </button>
+                  </Modal.Footer>
+                </Modal>
                 <button
                   className="HomePage-Go"
-                  style={{ width: "70px" }}
-                  onClick={handlelinkClosewithsave}
+                  style={{ width: "120px", marginTop: "20px" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setlinkShow(true);
+                  }}
                 >
-                  Save Changes
+                  Add Link
                 </button>
-              </Modal.Footer>
-            </Modal>
-            <button
-              className="HomePage-Go"
-              style={{ width: "120px", marginTop: "20px" }}
-              onClick={(e) => {
-                e.preventDefault();
-                setlinkShow(true);
-              }}
-            >
-              Add Link
-            </button>
-            <div className="Temp">
-              <button
-                type="submit"
-                className="HomePage-Go"
-                style={{ width: "300px", marginTop: "20px" }}
-              >
-                Deploy
-              </button>
-            </div>
-          </div>
+                <div className="Temp">
+                  <button
+                    type="submit"
+                    className="HomePage-Go"
+                    style={{ width: "300px", marginTop: "20px" }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      deployhandleshow();
+                    }}
+                  >
+                    Deploy
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="Container-Loader">
+                <div class="loader"></div>
+                <div className="Loader-Hint">Fetching Data ...</div>
+              </div>
+            </>
+          )}
+          <Modal show={deployshow} onHide={deployhandleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title className="Top-Heading">Deploying....</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {deployShowLink ? (
+                <>deployed Link</>
+              ) : (
+                <>
+                  <div className="Temp">
+                    <img
+                      src="https://i.gifer.com/XOsX.gif"
+                      style={{
+                        height: "100px",
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                      alt="duck"
+                    ></img>
+                  </div>
+                  <h3 className="Deploy-status">
+                    Deploying <span> </span>
+                  </h3>
+                  <p>Deployed Link :  </p>
+                </>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={deployhandleClose}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </form>
       </div>
     </>

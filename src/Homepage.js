@@ -16,19 +16,24 @@ function Homepage() {
           <div className="LogoutSection">
             {userid !== "" ? (
               <>
-                <button
-                  className="Top-Heading-Button-Login"
-                  onClick={logouthandler}
-                >
-                  Logout
-                </button>
+                <div style={{ display: "flex", justifyContent: "end" }}>
+                  <button
+                    className="Top-Heading-Button-Login"
+                    onClick={logouthandler}
+                  >
+                    Logout
+                  </button>
+                </div>
               </>
             ) : (
               <></>
             )}
           </div>
 
-          <div className="TopTop">
+          <div
+            className="TopTop"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
             <img src="https://i.gifer.com/6oa.gif" alt=""></img>
             <h1 className="Top-Heading">Welcome To Portify</h1>
           </div>
